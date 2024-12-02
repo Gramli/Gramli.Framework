@@ -14,8 +14,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = GetAge().UnwrapOrDefault(result),
-                People = GetPeople().UnwrapOrDefault(result),
+                ActualAge = GetAge().UnwrapOrWithErrors(result),
+                People = GetPeople().UnwrapOrWithErrors(result),
             };
 
             //assert
@@ -36,8 +36,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = GetAge().UnwrapOrDefault(result),
-                People = GetPeopleFailed().UnwrapOrDefault(result),
+                ActualAge = GetAge().UnwrapOrWithErrors(result),
+                People = GetPeopleFailed().UnwrapOrWithErrors(result),
             };
 
             //assert
@@ -58,8 +58,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = (await GetAgeAsync()).UnwrapOrDefault(result),
-                People = (await GetPeopleAsync()).UnwrapOrDefault(result),
+                ActualAge = (await GetAgeAsync()).UnwrapOrWithErrors(result),
+                People = (await GetPeopleAsync()).UnwrapOrWithErrors(result),
             };
 
             //assert
@@ -80,8 +80,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = await GetAgeAsync().UnwrapOrDefaultAsync(result),
-                People = await GetPeopleAsync().UnwrapOrDefaultAsync(result),
+                ActualAge = await GetAgeAsync().UnwrapOrWithErrorsAsync(result),
+                People = await GetPeopleAsync().UnwrapOrWithErrorsAsync(result),
             };
 
             //assert
@@ -102,8 +102,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = await GetAgeFailAsync().UnwrapOrDefaultAsync(result),
-                People = await GetPeopleFailAsync().UnwrapOrDefaultAsync(result),
+                ActualAge = await GetAgeFailAsync().UnwrapOrWithErrorsAsync(result),
+                People = await GetPeopleFailAsync().UnwrapOrWithErrorsAsync(result),
             };
 
             //assert
