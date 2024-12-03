@@ -3,7 +3,7 @@ using BenchmarkDotNet.Jobs;
 
 namespace ReflectionBenchmark.GetEnumAttribute
 {
-    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.Net90)]
     [Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.FastestToSlowest)]
     [MemoryDiagnoser]
     public class GetEnumAttributeBenchmark

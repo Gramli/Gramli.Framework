@@ -1,4 +1,4 @@
-﻿using AutoFixture;
+﻿using Bogus;
 
 namespace ReflectionBenchmark.GenericExport
 {
@@ -13,23 +13,25 @@ namespace ReflectionBenchmark.GenericExport
         public GenericExportBenchmarkData(int count)
         {
             _count = count;
-            LargeItems = new List<CustomLargeItem>();
-            Items = new List<CustomItem>();
-            SmallItems = new List<CustomSmallItem>();
+            LargeItems = [];
+            Items = [];
+            SmallItems = [];
 
             InitData();
         }
 
         private void InitData()
         {
-            var fixture = new Fixture();
-
             Console.WriteLine($"Initialize {_count}");
-            for(int i = 0; i < _count; i++)
+            var largeItemFaker = new Faker<CustomLargeItem>();
+            var customItemFaker = new Faker<CustomItem>();
+            var smallItemFaker = new Faker<CustomSmallItem>();
+
+            for (int i = 0; i < _count; i++)
             {
-                LargeItems.Add(fixture.Create<CustomLargeItem>());
-                Items.Add(fixture.Create<CustomItem>());
-                SmallItems.Add(fixture.Create<CustomSmallItem>());
+                LargeItems.Add(largeItemFaker.Generate());
+                Items.Add(customItemFaker.Generate());
+                SmallItems.Add(smallItemFaker.Generate());
             }
         }
 

@@ -6,7 +6,7 @@ namespace Extensions.FluentResult.Tests
     public class UnwrapTests
     {
         [Fact]
-        public void UnwrapOrDefault_FailedError()
+        public void UnwrapOrDefault_Success()
         {
             //arrange
             var result = new Result();
@@ -14,8 +14,9 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = GetAge().UnwrapOrWithErrors(result),
-                People = GetPeople().UnwrapOrWithErrors(result),
+                ActualAge = GetAge().UnwrapOrWithErrors(result, string.Empty),
+                People = GetPeople().UnwrapOrWithErrors(result, []),
+                Kings = GetKings().UnwrapOrWithErrors(result),
             };
 
             //assert
@@ -36,8 +37,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = GetAge().UnwrapOrWithErrors(result),
-                People = GetPeopleFailed().UnwrapOrWithErrors(result),
+                ActualAge = GetAge().UnwrapOrWithErrors(result, string.Empty),
+                People = GetPeopleFailed().UnwrapOrWithErrors(result, []),
             };
 
             //assert
@@ -50,7 +51,7 @@ namespace Extensions.FluentResult.Tests
         }
 
         [Fact]
-        public async Task UnwrapOrDefault_Async_FailedError()
+        public async Task UnwrapOrDefault_Async_Success()
         {
             //arrange
             var result = new Result();
@@ -58,8 +59,9 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = (await GetAgeAsync()).UnwrapOrWithErrors(result),
-                People = (await GetPeopleAsync()).UnwrapOrWithErrors(result),
+                ActualAge = (await GetAgeAsync()).UnwrapOrWithErrors(result, string.Empty),
+                People = (await GetPeopleAsync()).UnwrapOrWithErrors(result, []),
+                Kings = (await GetKingsAsync()).UnwrapOrWithErrors(result),
             };
 
             //assert
@@ -72,7 +74,7 @@ namespace Extensions.FluentResult.Tests
         }
 
         [Fact]
-        public async Task UnwrapOrDefault_UnwrapOrDefaultAsync()
+        public async Task UnwrapOrDefault_UnwrapOrDefaultAsync_Success()
         {
             //arrange
             var result = new Result();
@@ -80,8 +82,9 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = await GetAgeAsync().UnwrapOrWithErrorsAsync(result),
-                People = await GetPeopleAsync().UnwrapOrWithErrorsAsync(result),
+                ActualAge = await GetAgeAsync().UnwrapOrWithErrorsAsync(result, string.Empty),
+                People = await GetPeopleAsync().UnwrapOrWithErrorsAsync(result, []),
+                Kings = await GetKingsAsync().UnwrapOrWithErrorsAsync(result, []),
             };
 
             //assert
@@ -102,8 +105,8 @@ namespace Extensions.FluentResult.Tests
             //act
             var middleEarth = new MiddleEarth
             {
-                ActualAge = await GetAgeFailAsync().UnwrapOrWithErrorsAsync(result),
-                People = await GetPeopleFailAsync().UnwrapOrWithErrorsAsync(result),
+                ActualAge = await GetAgeFailAsync().UnwrapOrWithErrorsAsync(result, string.Empty),
+                People = await GetPeopleFailAsync().UnwrapOrWithErrorsAsync(result, []),
             };
 
             //assert
@@ -124,6 +127,9 @@ namespace Extensions.FluentResult.Tests
         public static Result<string> GetAge()
              => Result.Ok(UnwrapData.GetAge());
 
+        public static Result<IEnumerable<King>?> GetKings()
+            => Result.Ok<IEnumerable<King>?>(null);
+
         public static Result<IEnumerable<Person>> GetPeople()
             => Result.Ok<IEnumerable<Person>>(UnwrapData.GetPeople());
 
@@ -132,6 +138,9 @@ namespace Extensions.FluentResult.Tests
 
         public static Task<Result<IEnumerable<Person>>> GetPeopleAsync()
             => Task.FromResult(GetPeople());
+
+        public static Task<Result<IEnumerable<King>?>> GetKingsAsync()
+            => Task.FromResult(GetKings());
 
         public static Task<Result<string>> GetAgeFailAsync()
             => Task.FromResult(GetAgeFailed());
