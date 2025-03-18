@@ -3,7 +3,7 @@ using BenchmarkDotNet.Jobs;
 
 namespace GeneralBenchmark.ExceptionsAndResult
 {
-    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.Net90)]
     [Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.Declared)]
     [MemoryDiagnoser]
     public class ExceptionAndResultBenchmark

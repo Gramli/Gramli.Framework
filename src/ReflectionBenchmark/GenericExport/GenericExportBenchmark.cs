@@ -4,7 +4,7 @@ using ReflectionBenchmark.GenericExport.CsvExport;
 
 namespace ReflectionBenchmark.GenericExport
 {
-    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.Net90)]
     [Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.Declared)]
     [MemoryDiagnoser]
     public class GenericExportBenchmark
