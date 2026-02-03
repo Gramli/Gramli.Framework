@@ -3,7 +3,7 @@ using BenchmarkDotNet.Jobs;
 
 namespace GeneralBenchmark.CopyToAndWrite
 {
-    [SimpleJob(RuntimeMoniker.Net90)]
+    [SimpleJob(RuntimeMoniker.Net10_0)]
     [Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.Declared)]
     [MemoryDiagnoser]
     public class CopyToAndWriteBenchmark

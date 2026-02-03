@@ -2,4 +2,4 @@
 using GeneralBenchmark.CopyToAndWrite;
 using GeneralBenchmark.ExceptionsAndResult;
 
-BenchmarkRunner.Run<CopyToAndWriteBenchmark>();
+BenchmarkRunner.Run<ExceptionAndResultBenchmark>();

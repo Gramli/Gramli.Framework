@@ -3,7 +3,7 @@
     internal class Result<T>
     {
         public T? Value { get; }
-        public bool IsFailed { get; }
+        public bool IsFailed { get; private set; }
         public List<string> Errors { get; } = [];
 
         private Result(T value)
@@ -21,6 +21,13 @@
         {
             IsFailed = true;
             Errors.Add(error);
+        }
+
+        public Result<T> WithErrors(IEnumerable<string> errors)
+        {
+            IsFailed = true;
+            Errors.AddRange(errors);
+            return this;
         }
 
         public static Result<T> Ok(T value) => new(value);

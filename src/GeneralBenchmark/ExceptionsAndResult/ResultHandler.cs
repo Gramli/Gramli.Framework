@@ -1,6 +1,6 @@
 ﻿namespace GeneralBenchmark.ExceptionsAndResult
 {
-    public sealed class ResultHandler(Logger logger)
+    internal sealed class ResultHandler(Logger logger)
     {
         private readonly Logger _logger = logger;
 
@@ -22,7 +22,7 @@
             return new HandleDto { Sum = processResult.Value };
         }
 
-        private async Task<Result<double>> ProcessData(IEnumerable<RequestItem> data)
+        private static async Task<Result<double>> ProcessData(IEnumerable<RequestItem> data)
         {
             var getValidDataResult = await GetValidData(data);
 
@@ -41,18 +41,38 @@
             return Result<double>.Ok(positiveDataResult.Value.Sum(x => x.Value));
         }
 
-        private async Task<Result<IEnumerable<RequestItem>>> GetValidData(IEnumerable<RequestItem> inputData)
+        private static async Task<Result<IEnumerable<RequestItem>>> GetValidData(IEnumerable<RequestItem> inputData)
         {
             if (inputData.All(x => !x.IsValid))
             {
                 return Result<IEnumerable<RequestItem>>.Fail("All data are invalid");
             }
 
+            foreach (var item in inputData)
+            {
+                var isValidSecondLayerResult = IsValidSecondLayer(item);
+                if (isValidSecondLayerResult.IsFailed)
+                {
+                    return Result<IEnumerable<RequestItem>>.Fail("Second level validation is invalid.")
+                        .WithErrors(isValidSecondLayerResult.Errors);
+                }
+            }
+
             await Task.Yield();
             return Result<IEnumerable<RequestItem>>.Ok(inputData.Where(x => x.IsValid));
         }
 
-        private async Task<Result<IEnumerable<RequestItem>>> GetPositiveData(IEnumerable<RequestItem> inputData)
+        private static Result<bool> IsValidSecondLayer(RequestItem item)
+        {
+            if (!item.IsValidSecondLayer)
+            {
+                return Result<bool>.Fail("Item is not valid in the second layer");
+            }
+
+            return Result<bool>.Ok(true);
+        }
+
+        private static async Task<Result<IEnumerable<RequestItem>>> GetPositiveData(IEnumerable<RequestItem> inputData)
         {
             if (inputData.All(x => x.Value < 0))
             {
