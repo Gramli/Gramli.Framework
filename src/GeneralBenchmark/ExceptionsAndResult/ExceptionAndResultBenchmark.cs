@@ -17,9 +17,15 @@ public class ExceptionAndResultBenchmark
         yield return new ExceptionAndResultBenchmarkData(250);
         yield return new ExceptionAndResultBenchmarkData(500);
         yield return new ExceptionAndResultBenchmarkData(750);
-        yield return new ExceptionAndResultBenchmarkData(1000);
-        yield return new ExceptionAndResultBenchmarkData(1500);
-     }
+    }
+
+    public IEnumerable<ExceptionAndResultBenchmarkData> ValidOnlyData()
+    {
+        yield return new ExceptionAndResultBenchmarkData(100, true);
+        yield return new ExceptionAndResultBenchmarkData(250, true);
+        yield return new ExceptionAndResultBenchmarkData(500, true);
+        yield return new ExceptionAndResultBenchmarkData(750, true);
+    }
 
     public ExceptionAndResultBenchmark()
     {
@@ -37,6 +43,20 @@ public class ExceptionAndResultBenchmark
     [Benchmark]
     [ArgumentsSource(nameof(Data))]
     public async Task Exception_Throw(ExceptionAndResultBenchmarkData data)
+    {
+        var _ = await _throwExceptionHandler.Handle(data.RequestData);
+    }
+
+    [Benchmark]
+    [ArgumentsSource(nameof(ValidOnlyData))]
+    public async Task Result_Pattern_ValidOnly(ExceptionAndResultBenchmarkData data)
+    {
+        var _ = await _resultHandler.Handle(data.RequestData);
+    }
+
+    [Benchmark]
+    [ArgumentsSource(nameof(ValidOnlyData))]
+    public async Task Exception_Throw_ValidOnly(ExceptionAndResultBenchmarkData data)
     {
         var _ = await _throwExceptionHandler.Handle(data.RequestData);
     }

@@ -4,7 +4,7 @@
     {
         private readonly Logger _logger = logger;
 
-        public async Task<HandleDto?> Handle(IEnumerable<RequestItem> data)
+        public async ValueTask<HandleDto?> Handle(IEnumerable<RequestItem> data)
         {
             if (data is null || !data.Any())
             {
@@ -22,7 +22,7 @@
             return new HandleDto { Sum = processResult.Value };
         }
 
-        private static async Task<Result<double>> ProcessData(IEnumerable<RequestItem> data)
+        private static async ValueTask<Result<double>> ProcessData(IEnumerable<RequestItem> data)
         {
             var getValidDataResult = await GetValidData(data);
 
@@ -41,12 +41,14 @@
             return Result<double>.Ok(positiveDataResult.Value.Sum(x => x.Value));
         }
 
-        private static async Task<Result<IEnumerable<RequestItem>>> GetValidData(IEnumerable<RequestItem> inputData)
+        private static async ValueTask<Result<IEnumerable<RequestItem>>> GetValidData(IEnumerable<RequestItem> inputData)
         {
             if (inputData.All(x => !x.IsValid))
             {
                 return Result<IEnumerable<RequestItem>>.Fail("All data are invalid");
             }
+
+            await Task.Yield();
 
             foreach (var item in inputData)
             {
@@ -58,7 +60,6 @@
                 }
             }
 
-            await Task.Yield();
             return Result<IEnumerable<RequestItem>>.Ok(inputData.Where(x => x.IsValid));
         }
 
@@ -72,14 +73,15 @@
             return Result<bool>.Ok(true);
         }
 
-        private static async Task<Result<IEnumerable<RequestItem>>> GetPositiveData(IEnumerable<RequestItem> inputData)
+        private static async ValueTask<Result<IEnumerable<RequestItem>>> GetPositiveData(IEnumerable<RequestItem> inputData)
         {
+            await Task.Yield();
+
             if (inputData.All(x => x.Value < 0))
             {
                 return Result<IEnumerable<RequestItem>>.Fail("All data are smaller than 0");
             }
 
-            await Task.Yield();
             return Result<IEnumerable<RequestItem>>.Ok(inputData.Where(x => x.Value > 0));
         }
     }

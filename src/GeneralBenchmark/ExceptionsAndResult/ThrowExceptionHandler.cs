@@ -4,7 +4,7 @@
     {
         private readonly Logger _logger = logger;
 
-        public async Task<HandleDto?> Handle(IEnumerable<RequestItem> data)
+        public async ValueTask<HandleDto?> Handle(IEnumerable<RequestItem> data)
         {
             if (data is null || !data.Any())
             {
@@ -23,7 +23,7 @@
             }
         }
 
-        private static async Task<double> ProcessData(IEnumerable<RequestItem> data)
+        private static async ValueTask<double> ProcessData(IEnumerable<RequestItem> data)
         {
             var getValidDataResult = await GetValidData(data);
 
@@ -32,19 +32,20 @@
             return positiveDataResult.Sum(x => x.Value);
         }
 
-        private static async Task<IEnumerable<RequestItem>> GetValidData(IEnumerable<RequestItem> inputData)
+        private static async ValueTask<IEnumerable<RequestItem>> GetValidData(IEnumerable<RequestItem> inputData)
         {
             if (inputData.All(x => !x.IsValid))
             {
                 throw new ArgumentException("All data are invalid", nameof(inputData));
             }
 
+            await Task.Yield();
+
             foreach (var item in inputData)
             {
                 IsValidSecondLayer(item);
             }
 
-            await Task.Yield();
             return inputData.Where(x => x.IsValid);
         }
 
@@ -56,14 +57,15 @@
             }
         }
 
-        private static async Task<IEnumerable<RequestItem>> GetPositiveData(IEnumerable<RequestItem> inputData)
+        private static async ValueTask<IEnumerable<RequestItem>> GetPositiveData(IEnumerable<RequestItem> inputData)
         {
+            await Task.Yield();
+
             if (inputData.All(x => x.Value < 0))
             {
                 throw new ArgumentException("All data are smaller than 0", nameof(inputData));
             }
 
-            await Task.Yield();
             return inputData.Where(x => x.Value > 0);
         }
     }

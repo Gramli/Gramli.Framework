@@ -4,13 +4,13 @@
     {
         private readonly int _count;
         public List<RequestItem> RequestData { get; } = [];
-        public ExceptionAndResultBenchmarkData(int count)
+        public ExceptionAndResultBenchmarkData(int count, bool valid = false)
         {
             _count = count;
-            InitData();
+            InitData(valid);
         }
 
-        private void InitData()
+        private void InitData(bool valid)
         {
             for (var i = 0; i < _count; i++)
             {
@@ -19,9 +19,9 @@
 
                 RequestData.Add(new RequestItem
                 {
-                    IsValid = isValid,
-                    Value = -1,
-                    IsValidSecondLayer = isValidSecondLayer
+                    IsValid = valid ? valid : isValid,
+                    Value = valid ? 1 : - 1,
+                    IsValidSecondLayer = valid ? valid : isValidSecondLayer
                 });
             }
         }

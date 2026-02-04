@@ -1,37 +1,39 @@
 ﻿namespace GeneralBenchmark.ExceptionsAndResult
 {
-    internal class Result<T>
+    internal readonly struct Result<T>
     {
         public T? Value { get; }
-        public bool IsFailed { get; private set; }
-        public List<string> Errors { get; } = [];
+        public bool IsFailed { get; }
+        public IEnumerable<string> Errors { get; }
 
         private Result(T value)
         {
             Value = value;
+            IsFailed = false;
+            Errors = [];
         }
 
-        private Result(List<string> errors)
+        private Result(IEnumerable<string> errors)
         {
+            Value = default;
             IsFailed = true;
             Errors = errors;
         }
 
         private Result(string error)
         {
+            Value = default;
             IsFailed = true;
-            Errors.Add(error);
+            Errors = [error];
         }
 
         public Result<T> WithErrors(IEnumerable<string> errors)
         {
-            IsFailed = true;
-            Errors.AddRange(errors);
-            return this;
+            return new Result<T>(Errors.Concat(errors));
         }
 
         public static Result<T> Ok(T value) => new(value);
-        public static Result<T> Fail(List<string> errors) => new(errors);
+        public static Result<T> Fail(IEnumerable<string> errors) => new(errors);
         public static Result<T> Fail(string error) => new(error);
 
         public override string ToString()
