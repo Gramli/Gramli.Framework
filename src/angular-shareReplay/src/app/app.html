@@ -1,0 +1,35 @@
+<div class="container">
+  <h1>{{ title() }}</h1>
+
+  <div class="buttons-group">
+    <div class="button-section">
+      <h3>Basic Caching (Manual)</h3>
+      <button (click)="loadVehicles()" class="refresh-button" [class.active]="activeMethod() === 'basic'">Load Vehicles (Basic)</button>
+    </div>
+
+    <div class="button-section">
+      <h3>shareReplay (Manual Refresh)</h3>
+      <button (click)="loadVehiclesShareReplay()" class="refresh-button" [class.active]="activeMethod() === 'shareReplay'">Load Vehicles (ShareReplay)</button>
+    </div>
+
+    <div class="button-section">
+      <h3>BehaviorSubject + switchMap (Smart Refresh)</h3>
+      <button (click)="loadVehiclesBehavior()" class="refresh-button" [class.active]="activeMethod() === 'behavior'">Load Vehicles (Behavior)</button>
+      <button (click)="refreshBehavior()" class="refresh-button refresh-only" [class.active]="activeMethod() === 'behavior'">Refresh Data (Behavior)</button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="loading">Loading vehicles...</div>
+  }
+
+  @if (!loading() && vehicles().length > 0) {
+    <div class="vehicles-list">
+      <div *ngFor="let vehicle of vehicles()" class="vehicle-card">
+        <img [src]="vehicle.image" [alt]="vehicle.name" class="vehicle-image" />
+        <h2>{{ vehicle.name }}</h2>
+        <p>{{ vehicle.description }}</p>
+      </div>
+    </div>
+  }
+</div>
