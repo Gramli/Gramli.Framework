@@ -347,3 +347,48 @@ healthchecksdb
 
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
+
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/angular-shareReplay/dist
+/angular-shareReplay/tmp
+/angular-shareReplay/out-tsc
+/angular-shareReplay/bazel-out
+
+# Node
+/angular-shareReplay/node_modules
+/angular-shareReplay/npm-debug.log
+/angular-shareReplay/yarn-error.log
+
+# IDEs and editors
+/angular-shareReplay/.idea/
+/angular-shareReplay/.project
+/angular-shareReplay/.classpath
+/angular-shareReplay/.c9/
+/angular-shareReplay/*.launch
+/angular-shareReplay/.settings/
+/angular-shareReplay/*.sublime-workspace
+
+# Visual Studio Code
+/angular-shareReplay/.vscode/*
+!/angular-shareReplay/.vscode/settings.json
+!/angular-shareReplay/.vscode/tasks.json
+!/angular-shareReplay/.vscode/launch.json
+!/angular-shareReplay/.vscode/extensions.json
+/angular-shareReplay/.history/*
+
+# Miscellaneous
+/angular-shareReplay/.angular/cache
+/angular-shareReplay/.sass-cache
+/angular-shareReplay/.connect.lock
+/angular-shareReplay/.coverage
+/angular-shareReplay/.libpeerconnection.log
+/angular-shareReplay/.testem.log
+/angular-shareReplay/typings
+/angular-shareReplay/__screenshots__/
+
+# System files
+/angular-shareReplay/.DS_Store
+/angular-shareReplay/Thumbs.db
+
