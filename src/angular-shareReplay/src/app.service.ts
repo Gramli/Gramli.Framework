@@ -67,7 +67,8 @@ export class AppService {
               map((response: any) => response.data),
               retry(2),
               catchError((error) => {
-                return throwError(() => error);
+                console.error('Error fetching vehicles:', error);
+                return of([]); // Return empty array to keep stream alive
               }),
             ),
         ),
