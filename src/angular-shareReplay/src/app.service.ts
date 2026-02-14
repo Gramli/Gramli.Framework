@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Vehicle } from './app.model';
+import { VehiclesApiResponse, Vehicle } from './app.model';
 import {
   BehaviorSubject,
   catchError,
-  map,
+  EMPTY,
   Observable,
   of,
-  pipe,
   retry,
   shareReplay,
   switchMap,
@@ -18,34 +17,33 @@ import {
   providedIn: 'root',
 })
 export class AppService {
-  private vehiclesDataCache: Vehicle[] | null = null;
+  private vehiclesDataCache: VehiclesApiResponse | null = null;
 
-  private vehiclesDataShareReplay$: Observable<Vehicle[]> | null = null;
-  private vehiclesDataBehavior$: Observable<Vehicle[]> | null = null;
+  private vehiclesDataShareReplay$: Observable<VehiclesApiResponse> | null = null;
+  private vehiclesDataBehavior$: Observable<VehiclesApiResponse> | null = null;
   private refreshTrigger$ = new BehaviorSubject<void>(undefined);
 
   constructor(private http: HttpClient) {}
 
-  public getVehiclesData(): Observable<Vehicle[]> {
+  public getVehiclesData(): Observable<VehiclesApiResponse> {
     if (this.vehiclesDataCache) {
       return of(this.vehiclesDataCache);
     }
 
-    const observable = this.http.get<Vehicle[]>(
+    const observable = this.http.get<VehiclesApiResponse>(
       'https://starwars-databank-server.vercel.app/api/v1/vehicles',
     );
-    observable.subscribe((response: any) => {
-      this.vehiclesDataCache = response.data;
+    observable.subscribe((response: VehiclesApiResponse) => {
+      this.vehiclesDataCache = response;
     });
     return observable;
   }
 
-  public getVehicleShareReplay(): Observable<Vehicle[]> {
+  public getVehicleShareReplay(): Observable<VehiclesApiResponse> {
     if (!this.vehiclesDataShareReplay$) {
       this.vehiclesDataShareReplay$ = this.http
-        .get<Vehicle[]>('https://starwars-databank-server.vercel.app/api/v1/vehicles')
+        .get<VehiclesApiResponse>('https://starwars-databank-server.vercel.app/api/v1/vehicles')
         .pipe(
-          map((response: any) => response.data),
           retry(2),
           catchError((error) => {
             this.vehiclesDataShareReplay$ = null;
@@ -57,18 +55,17 @@ export class AppService {
     return this.vehiclesDataShareReplay$;
   }
 
-  public getVehicleBehavior(): Observable<Vehicle[]> {
+  public getVehicleBehavior(): Observable<VehiclesApiResponse> {
     if (!this.vehiclesDataBehavior$) {
       this.vehiclesDataBehavior$ = this.refreshTrigger$.pipe(
         switchMap(() =>
           this.http
-            .get<Vehicle[]>('https://starwars-databank-server.vercel.app/api/v1/vehicles')
+            .get<VehiclesApiResponse>('https://starwars-databank-server.vercel.app/api/v1/vehicles')
             .pipe(
-              map((response: any) => response.data),
               retry(2),
               catchError((error) => {
                 console.error('Error fetching vehicles:', error);
-                return of([]); // Return empty array to keep stream alive
+                return EMPTY;
               }),
             ),
         ),

@@ -23,8 +23,8 @@ export class App implements OnInit {
     this.activeMethod.set('basic');
     this.loading.set(true);
     this.appService.getVehiclesData().subscribe({
-      next: (data) => {
-        this.vehicles.set(data);
+      next: (response) => {
+        this.vehicles.set(response.data);
         this.loading.set(false);
       },
       error: (error) => {
@@ -38,8 +38,8 @@ export class App implements OnInit {
     this.activeMethod.set('shareReplay');
     this.loading.set(true);
     this.appService.getVehicleShareReplay().subscribe({
-      next: (data) => {
-        this.vehicles.set(data);
+      next: (response) => {
+        this.vehicles.set(response.data);
         this.loading.set(false);
       },
       error: (error) => {
@@ -53,8 +53,8 @@ export class App implements OnInit {
     this.activeMethod.set('behavior');
     this.loading.set(true);
     this.appService.getVehicleBehavior().subscribe({
-      next: (data) => {
-        this.vehicles.set(data);
+      next: (response) => {
+        this.vehicles.set(response.data);
         this.loading.set(false);
       },
       error: (error) => {

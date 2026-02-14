@@ -4,3 +4,7 @@ export interface Vehicle {
     description: string;
     image: string;
 }
+
+export interface VehiclesApiResponse {
+    data: Vehicle[];
+}
