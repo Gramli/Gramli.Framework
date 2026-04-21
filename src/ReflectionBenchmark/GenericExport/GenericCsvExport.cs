@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using System.Text;
 
 namespace ReflectionBenchmark.GenericExport
@@ -7,57 +8,61 @@ namespace ReflectionBenchmark.GenericExport
     {
         public static string ExportToCsv<T>(this IEnumerable<T> items, string separator = ";") where T : class
         {
-            if (items is null || !items.Any())
-            {
-                throw new ArgumentNullException(nameof(items));
-            }
+            ArgumentNullException.ThrowIfNull(items);
 
-            var properties = items.First().GetType().GetProperties();
-
-            if (properties is null || !properties.Any())
-            {
-                throw new ArgumentNullException(nameof(properties));
-            }
+            var properties = TypePropertiesCache<T>.Properties;
+            var lastIndex = properties.Length - 1;
 
             var result = new StringBuilder();
-
-            var headers = GetHeaders(properties, separator);
-            result.AppendLine(headers);
+            result.Append(string.Join(separator, TypePropertiesCache<T>.HeaderNames));
+            result.AppendLine();
 
             foreach (var item in items)
             {
-                result.AppendLine();
                 for (var i = 0; i < properties.Length; i++)
                 {
-                    result.Append(properties[i].GetValue(item));
+                    AppendValue(result, properties[i].GetValue(item));
 
-                    if (!properties.IsEnd(i))
-                    {
+                    if (i < lastIndex)
                         result.Append(separator);
-                    }
                 }
+                result.AppendLine();
             }
 
             return result.ToString();
         }
 
-        private static string GetHeaders(PropertyInfo[] properties, string separator)
+        private static void AppendValue(StringBuilder sb, object? value)
         {
-            var stringBuilder = new StringBuilder();
-            for (var i  = 0; i < properties.Length; i++)
+            if (value is string str)
+                sb.Append(str);
+            else if (value is IFormattable formattable)
+                sb.Append(formattable.ToString(null, CultureInfo.InvariantCulture));
+            else
+                sb.Append(value);
+        }
+
+        private static class TypePropertiesCache<T> where T : class
+        {
+            public static readonly PropertyInfo[] Properties;
+            public static readonly string[] HeaderNames;
+
+            static TypePropertiesCache()
             {
-                var headerAttribute = properties[i].GetCustomAttribute<CsvHeaderAttribute>()
-                    ?? throw new ArgumentNullException(nameof(CsvHeaderAttribute));
+                Properties = typeof(T).GetProperties();
 
-                stringBuilder.Append(headerAttribute.Header);
+                if (Properties.Length == 0)
+                    throw new InvalidOperationException($"Type '{typeof(T).Name}' has no properties.");
 
-                if(!properties.IsEnd(i))
+                HeaderNames = new string[Properties.Length];
+                for (var i = 0; i < Properties.Length; i++)
                 {
-                   stringBuilder.Append(separator);
+                    var attr = Properties[i].GetCustomAttribute<CsvHeaderAttribute>()
+                        ?? throw new InvalidOperationException(
+                            $"Property '{Properties[i].Name}' is missing {nameof(CsvHeaderAttribute)}.");
+                    HeaderNames[i] = attr.Header;
                 }
             }
-
-            return stringBuilder.ToString();
         }
     }
 }

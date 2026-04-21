@@ -1,24 +1,25 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace ReflectionBenchmark.GenericExport.CsvExport
 {
     public static class CsvItemExport
     {
-        private static readonly IList<string> Headers = new List<string>
-        {
-            "Item1","Item2","Item3","Item4","Item5","Item6","Item7","Item8","Item9","Item10","Item11","Item12","Item13","Item14","Item15","Item16",
-        };
+        private const string DefaultHeaders =
+            "Item1;Item2;Item3;Item4;Item5;Item6;Item7;Item8;Item9;Item10;Item11;Item12;Item13;Item14;Item15;Item16";
+
         public static string ExportToCsvFast(this IEnumerable<CustomItem> items, string separator = ";")
         {
-            if (items is null || !items.Any())
+            if (items is null)
             {
                 throw new ArgumentNullException(nameof(items));
             }
 
             var result = new StringBuilder();
 
-            var headers = GetHeaders(separator);
-            result.AppendLine(headers);
+            result.AppendLine(separator == ";" ? DefaultHeaders : string.Join(separator,
+                "Item1", "Item2", "Item3", "Item4", "Item5", "Item6", "Item7",
+                "Item8", "Item9", "Item10", "Item11", "Item12", "Item13", "Item14", "Item15", "Item16"));
 
             foreach (var item in items)
             {
@@ -28,63 +29,25 @@ namespace ReflectionBenchmark.GenericExport.CsvExport
             return result.ToString();
         }
 
-        private static string GetHeaders(string separator)
+        private static void AppendByProperty(this StringBuilder sb, CustomItem item, string separator)
         {
-            var stringBuilder = new StringBuilder();
-            for (var i = 0; i < Headers.Count; i++)
-            {
-                stringBuilder.Append(Headers[i]);
-
-                if (!Headers.IsEnd(i))
-                {
-                    stringBuilder.Append(separator);
-                }
-            }
-
-            return stringBuilder.ToString();
-        }
-
-        private static void AppendInterpolation(this StringBuilder stringBuilder, CustomItem item, string separator) 
-        {
-            stringBuilder.AppendLine();
-            var row = @$"{item.Item1}{separator}
-                    {item.Item2}{separator}
-                    {item.Item3}{separator}
-                    {item.Item4}{separator}
-                    {item.Item5}{separator}
-                    {item.Item6}{separator}
-                    {item.Item7}{separator}
-                    {item.Item8}{separator}
-                    {item.Item9}{separator}
-                    {item.Item10}{separator}
-                    {item.Item11}{separator}
-                    {item.Item12}{separator}
-                    {item.Item13}{separator}
-                    {item.Item14}{separator}
-                    {item.Item15}{separator}
-                    {item.Item16}{separator}";
-
-            stringBuilder.Append(row);
-        }
-
-        private static void AppendByProperty(this StringBuilder stringBuilder, CustomItem item, string separator)
-        {
-            stringBuilder.Append($"{item.Item1}{separator}");
-            stringBuilder.Append($"{item.Item2}{separator}");
-            stringBuilder.Append($"{item.Item3}{separator}");
-            stringBuilder.Append($"{item.Item4}{separator}");
-            stringBuilder.Append($"{item.Item5}{separator}");
-            stringBuilder.Append($"{item.Item6}{separator}");
-            stringBuilder.Append($"{item.Item7}{separator}");
-            stringBuilder.Append($"{item.Item8}{separator}");
-            stringBuilder.Append($"{item.Item9}{separator}");
-            stringBuilder.Append($"{item.Item10}{separator}");
-            stringBuilder.Append($"{item.Item11}{separator}");
-            stringBuilder.Append($"{item.Item12}{separator}");
-            stringBuilder.Append($"{item.Item13}{separator}");
-            stringBuilder.Append($"{item.Item14}{separator}");
-            stringBuilder.Append($"{item.Item15}{separator}");
-            stringBuilder.Append($"{item.Item16}{separator}");
+            sb.Append(item.Item1).Append(separator);
+            sb.Append(item.Item2).Append(separator);
+            sb.Append(item.Item3.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item4.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item5.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item6.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item7).Append(separator);
+            sb.Append(item.Item8).Append(separator);
+            sb.Append(item.Item9).Append(separator);
+            sb.Append(item.Item10.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item11.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item12.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item13.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item14).Append(separator);
+            sb.Append(item.Item15.ToString(null, CultureInfo.InvariantCulture)).Append(separator);
+            sb.Append(item.Item16);
+            sb.AppendLine();
         }
     }
 }

@@ -3,7 +3,7 @@
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class CsvHeaderAttribute : Attribute
     {
-        public string Header { get; private set; } 
+        public string Header { get; } 
 
         public CsvHeaderAttribute(string header)
         {
