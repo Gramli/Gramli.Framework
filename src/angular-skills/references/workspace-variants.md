@@ -1,85 +1,73 @@
 # Workspace and dependency variants
 
-Read the relevant section when the workspace uses Nx, custom builders, publishable
-libraries or coordinated dependency changes. Preserve the package manager and
-workspace boundaries; do not treat every package.json as an independent install root.
+Read for Nx/custom tooling, libraries or coordinated peers. Preserve the manager
+and workspace boundaries; package.json files are not necessarily install roots.
 
-## Package manager and package inventory
+## Resolution and tooling
 
-Reconcile `packageManager`, manager configuration, lockfile, CI and Angular CLI's
-configured package manager. Inspect workspaces, overrides/resolutions, patches,
-aliases and file/link dependencies that alter effective resolution. Resolve
-conflicting signals before installing. Do not delete a lockfile to bypass peers.
-Use reproducible installs for the baseline and final consistency check where
-supported; dependency updates need the manager's documented lockfile update mode.
+Reconcile packageManager, lockfile, manager/Angular CLI configuration and CI.
+Inspect workspaces, overrides/resolutions, patches, aliases and file/link inputs.
+Resolve conflicts before installing; never delete a lockfile to bypass peers.
+Use reproducible baseline/final installs and documented update modes.
 
-Discover installed framework packages and their update groups, including optional
-localize, elements, upgrade, service-worker, SSR and language-service packages.
-Identify compiler-cli, CLI/devkit/build packages, actual workspace builders,
-Material/CDK and other packages with migration collections. Check framework
-alignment and duplicate Angular runtimes without imposing one patch number on
-packages with independent releases. Consult official package metadata for exact
-peer/engine ranges and coordinated package groups.
+Discover framework packages/update groups, optional localize/elements/upgrade/
+service-worker/SSR/language-service packages, compiler-cli, CLI/devkit/build
+packages, builders, Material/CDK and third-party migration collections.
+Verify effective peers/engines, framework alignment and duplicate runtimes;
+independent package releases need not share patch numbers.
 
-Resolve and record exact destination versions within user constraints. Execute
-through the repository's verified local tooling (for example the manager's local
-exec command or a verified project binary). Do not use an invocation that silently
-downloads current tooling when the local executable is missing. Where an official
-transition requires a temporary CLI, choose its published version explicitly and
-account for its engines and its supported source/target path.
+Record compatible exact destinations within constraints. Use verified local
+execution; missing binaries must not silently trigger latest downloads.
+Officially required temporary CLIs need explicit published versions and compatible
+engines/source/target paths.
 
-## Nx or custom migration owners
+## Runtime selection
 
-For Nx, consult [the Angular/Nx matrix](https://nx.dev/docs/kb/angular-nx-version-matrix)
-and [the official update workflow](https://nx.dev/docs/features/automate-updating-dependencies)
-for the installed/target Nx versions. Nx and Angular have distinct major numbers;
-plan compatible checkpoints for both. Preserve Nx plugin alignment.
+Choose the latest patch of the newest LTS line matching target Angular and
+project/tooling constraints. Verify [Node LTS status](https://nodejs.org/en/about/previous-releases)
+and [Angular ranges](https://angular.dev/reference/versions); honor explicit requirements.
+Use older compatible Node temporarily for baseline/intermediate migrations.
 
-Use the supported Nx migration planner, inspect package changes and the generated
-migration plan, install with the workspace manager, then execute that plan.
-Account for Angular/CLI/Material migrations included or omitted by the plan.
-Do not additionally run an independent `ng update` unless official guidance
-identifies a missing step. Retain recovery evidence and verify commit/prompt/agent
-behavior before execution. Current Nx documentation may describe features absent
-from older installed Nx versions; use matching help and release documentation.
+Before changing Node pins, verify bundled/effective CI npm, overrides, published
+Node engines and install/publish requirements, including current Node/npm minima
+and provider/workflow requirements for [trusted publishing/OIDC](https://docs.npmjs.com/trusted-publishers/).
+Pin npm separately in project/CI when needed; preserve the package manager and
+publishing method. Report compatibility conflicts.
 
-For custom builders or non-CLI workspaces, identify their official update route
-and supported Angular versions. Do not convert to standard CLI builders or create
-angular.json merely to force this skill's default workflow. If migration execution
-is unavailable, explain the missing route rather than only editing versions and
-claiming migrations ran.
+## Migration owner
 
-## Libraries
+For Nx, use matching help/release guidance, the
+[Angular/Nx matrix](https://nx.dev/docs/kb/angular-nx-version-matrix) and
+[update workflow](https://nx.dev/docs/features/automate-updating-dependencies).
+Nx/Angular majors differ; plan compatible checkpoints and aligned plugins.
+Inspect planned package changes/migrations, install with the workspace manager,
+then execute the plan. Account for included/omitted Angular/CLI/Material schematics;
+run independent ng update only for an officially identified missing step.
+Retain recovery evidence and verify commit/prompt/agent behavior; newer documented
+features may be absent from installed Nx.
 
-Inspect each affected library's manifest, Angular peer dependencies, ng-package
-configuration, entry points, TypeScript settings and packaging-tool compatibility
-(including ng-packagr). Build dependencies in workspace order.
+Custom/non-CLI workspaces follow their documented supported migration route.
+Do not create angular.json or convert builders to force the default workflow.
+If no route exists, explain it; version edits alone do not prove migration.
 
-Validate production library packaging and the consuming application, not just
-source compilation through development path mappings. Check partial/full Ivy
-format and the declared consumer Angular range against
-[official library guidance](https://angular.dev/tools/libraries/creating-libraries).
-Do not broaden published peer support without evidence or accidentally bundle a
-second Angular runtime. Rebuild local/link dependencies under the destination
-toolchain. Historical View Engine/ngcc constraints require exceptional-path guidance.
+## Libraries and peers
 
-## Coordinated dependency transitions
+Inspect library manifests/peers, ng-package/entry points, TypeScript and ng-packagr
+compatibility. Build dependencies in order, production packages and consumer apps;
+development source aliases can hide packaging failures. Check partial/full Ivy and
+declared consumer support against [library guidance](https://angular.dev/tools/libraries/creating-libraries).
+Rebuild local/link libraries, avoid duplicate runtimes and unsupported peer-range
+expansion, and consult exceptional-path guidance for View Engine/ngcc.
 
-Resolve supported releases and required migrations for Material/CDK, SSR,
-ngUpgrade, test/lint plugins and affected third-party peers before invoking updates.
-For CDK without Material, use its applicable migration route; do not add Material.
-Run documented third-party update schematics where available instead of only
-bumping package versions. Inspect Material theme/DOM changes and migration TODOs.
+Plan Material/CDK (including CDK-only), SSR, ngUpgrade, test/lint plugins and
+third-party releases/migrations before updates. Run documented schematics;
+do not add Material to CDK-only projects. Inspect themes/DOM and migration TODOs.
 
-Plan ordering for packages that support only the source or only the destination.
-Use a documented joint update or compatible bridge release where available;
-upgrading a peer first can itself make the source un-installable. If no supported
-transition exists, report the package/version/constraint and alternatives within
-scope instead of cycling installs or replacing a library without authorization.
+Source-only/destination-only peers need a documented joint update or bridge release.
+Do not cycle incompatible installs or replace libraries without authorization;
+report unsupported transitions and scoped alternatives.
 
-Distinguish stale declared peer metadata from demonstrated runtime incompatibility.
-Use `--force` only for an identified mismatch with supporting compatibility
-evidence, explained residual risk and no safer supported route, with authorization
-when a material user choice remains. Do not treat it as fixing incompatibility or
-silently combine it with package-manager peer bypasses. Preserve warnings and
-validate the affected runtime behavior.
+For `--force`, distinguish stale metadata from actual incompatibility; require
+supporting evidence, explained residual risk, no safer route and authorization
+when a material choice remains. Never silently bypass peers or combine bypasses.
+Preserve warnings and validate affected runtime behavior.

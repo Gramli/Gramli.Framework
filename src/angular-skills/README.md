@@ -1,107 +1,90 @@
 # Angular update skill
 
-An instruction-first skill for Angular framework/CLI version upgrades. It retrieves
-official migration evidence, preserves user work, validates one major at a time
-and distinguishes installed packages from completed migrations. No helper scripts
-or extra packages are required by the skill itself.
+Upgrade Angular versions using official migrations, sequential validated majors,
+protected user work and clean-install verification. No bundled scripts or extra
+packages are required by the skill itself.
 
 ```text
 angular-skills/
-|-- SKILL.md                 Core workflow and safety rules
+|-- SKILL.md
 |-- references/
-|   |-- update-guide.md      Checklist retrieval, phases and evidence
-|   |-- git-and-resume.md    Existing changes, isolation and recovery
-|   |-- workspace-variants.md Nx, libraries and coordinated dependencies
-|   |-- validation.md        Feature-dependent acceptance checks
-|   `-- legacy-and-prerelease.md Exceptional version paths
-|-- assets/
-|   `-- report-template.md   Report fields and execution evidence
-`-- README.md                Distribution, usage and evaluation scenarios
+|   |-- update-guide.md
+|   |-- git-and-resume.md
+|   |-- workspace-variants.md
+|   |-- validation.md
+|   `-- legacy-and-prerelease.md
+|-- assets/report-template.md
+`-- README.md
 ```
 
 ## Install
 
-Copy the **entire skill bundle**, preserving references and assets, into a folder
-named angular-update in the target repository:
+Copy the **whole bundle**, keeping relative paths, to:
 
 ```text
 <repository-root>/.agents/skills/angular-update/
 ```
 
-This angular-skills directory is a distribution location; install it in a discovery
-directory before use. Keep one authoritative installed copy. Include installed
-repository skills in the repository's normal tracking policy so newly copied
-untracked files do not unexpectedly block Angular CLI updates. The agent must
-still protect any untracked files rather than silently committing or ignoring them.
+angular-skills is a distribution folder. Keep one authoritative installed copy
+and follow repository tracking policy: untracked skill files can block ng update;
+the agent must preserve them, not silently commit/ignore them.
 
-Codex and Copilot support .agents/skills repository skills; Copilot also supports
-.github/skills. For personal installation, use `~/.agents/skills/angular-update`
-(Windows: `%USERPROFILE%\.agents\skills\angular-update`); Copilot also supports
-`~/.copilot/skills`. Personal installation is local; use repository installation
-for teammates or hosted agents. See [Codex skills](https://developers.openai.com/codex/skills/)
-and [Copilot agent skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills).
+Personal location: `~/.agents/skills/angular-update`
+(Windows: `%USERPROFILE%\.agents\skills\angular-update`).
+Personal installs are local; repository installs serve teammates/hosted agents.
+Copilot additionally supports .github/skills and ~/.copilot/skills. See
+[Codex skills](https://developers.openai.com/codex/skills/) and
+[Copilot skills](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills).
 
 ## Use
 
-In Codex, open the target repository and prompt:
-
 ```text
 Use $angular-update to upgrade this project to Angular 22.
+Use $angular-update to plan an upgrade to Angular 22 without modifying the repository.
 ```
 
-Or request a constrained minor, exact published version or latest stable. Angular
-22 is an example, not a hard-coded latest release. The skill detects the source.
-For a read-only assessment:
+Targets can be major, minor, exact or latest stable; Angular 22 is an example.
+Matching version-upgrade requests can trigger automatically. Standalone conversion
+and unrelated modernization are separate. Restart if discovery fails or provide
+the installed SKILL.md path, with supporting files beside it.
 
-```text
-Use $angular-update to plan this upgrade to Angular 22. Do not modify the repository.
-```
+For Copilot, use VS Code agent mode or CLI with repository/terminal access.
+CLI: check `/skills list`, then invoke `/angular-update`.
+See [Copilot CLI skills](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills).
 
-The description also allows matching version-upgrade requests without explicit
-invocation. Standalone conversion and unrelated modernization are separate tasks.
-If discovery fails, restart the agent or ask it to read the installed SKILL.md;
-keep supporting files beside it.
+## Prerequisites and recovery
 
-For Copilot, use an agent experience with repository and terminal access, such as
-VS Code agent mode or Copilot CLI, and request the angular-update skill. In Copilot
-CLI, check discovery with `/skills list` and invoke `/angular-update`. See
-[Copilot CLI skills](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-skills).
+Provide official documentation/registry access or sufficient exact cached evidence,
+compatible local runtimes, the repository manager and validation prerequisites.
+Host permissions/user choices apply; no automatic commits, pushes, PRs, manager
+changes or global Node installation.
 
-## Prerequisites and result
-
-Provide official documentation/registry access or sufficient exact-version cached
-evidence, the repository package manager, compatible locally activated runtimes,
-and available validation prerequisites. Host permissions and explicit user choices
-take precedence. The skill does not automatically push, open a PR, commit, change
-package managers or install Node globally.
-
-On interruption, retain the worktree and recovery evidence. Resume on the intended
-context after resolving the prerequisite; target packages may already be installed
-while migrations or validation are unfinished. Reports distinguish requested,
-resolved and actual versions, last validated state, partial edits and remaining work.
-SUCCESS includes explicit validation evidence; a no-op does not repair the project.
+Retain the worktree/recovery record on interruption. Resume the intended context:
+installed targets may still have unfinished migrations. Reports distinguish
+requested/resolved/actual versions, last validated state, partial edits and remaining
+work. SUCCESS needs evidence, including isolated npm ci; no-op repairs leave the
+no-op path. Defective locks can undergo controlled regeneration with diff review,
+affected validation and another fresh npm ci.
 
 ## Evaluate revisions
 
-Use disposable fixtures and the installed bundle, without upgrading a live
-repository merely to test the instructions. Static frontmatter/link checks verify
-packaging, not migration behavior. Evaluate observable decisions and artifacts:
+Use disposable fixtures, never live upgrades merely to test instructions.
+Metadata/link checks establish packaging, not behavior. Assess decisions/artifacts:
 
 | Scenario | Expected behavior |
 | --- | --- |
-| Plan-only or review request | Inspect and explain; no branch, install or migration |
-| Exact patch or constrained minor | Preserve the constraint and inspect interval-specific evidence |
-| Multi-major update without commit authorization | Separate validated transitions; no implicit commits |
-| Dirty tree with unrelated, staged and untracked work | Record and preserve it; establish a safe tooling context |
-| Overlapping user edits | Resolve isolation/input choice before mutating those files |
-| Installed destination after schematic failure | Recover pending migration work; do not declare a no-op |
-| Unsupported initial Node runtime | Activate a source-compatible runtime before the baseline install |
-| Nx or custom builder workspace | Choose its supported migration owner and avoid duplicate workflows |
-| Guide fetch returns only selectors | Retrieve rendered checklist or official data/logic; disclose fallback |
-| Already-current workspace without interruption evidence | Validate a no-op without demanding historical migration logs |
-| SSR/localized/library build succeeds but relevant runtime/output checks fail | Report incomplete validation rather than SUCCESS |
-| Optional modernization prompt | Preserve supported existing architecture unless scope justifies conversion |
+| Plan/review only | Read-only; no branch/install/migration |
+| Exact patch/constrained minor | Retain constraint; inspect interval evidence |
+| Multiple majors, no commit authorization | Validate sequentially; no implicit commits |
+| Dirty staged/unstaged/untracked files | Record/preserve them; establish safe context |
+| Overlapping edits | Resolve inputs/isolation before mutation |
+| Installed target after failed schematic | Recover pending migrations; no false no-op |
+| Unsupported initial Node | Activate source-compatible runtime before installation |
+| Nx/custom builder | Supported owner; avoid duplicate migration flows |
+| Guide returns selectors | Retrieve rendered checklist or official data/logic |
+| Current project without historical logs | Eligible no-op; no fabricated history requirement |
+| SSR/i18n/library runtime/output failure | No SUCCESS based only on compilation |
+| Optional modernization | Preserve supported setup unless scope justifies it |
 
-Include negative trigger cases such as standalone conversion or an unrelated
-Angular feature change. Assess actual command plans, preserved files, migration
-coverage and reported evidence rather than matching prescribed wording.
+Include negative triggers such as standalone conversion or unrelated feature work;
+score preservation, command plans, migration coverage and evidence rather than wording.

@@ -1,149 +1,109 @@
-# Select validation that matches the workspace
+# Validation
 
-Read this for final npm installation verification or projects with libraries,
-SSR/hydration, PWA, localization, custom builders or deployment-sensitive changes. Derive checks from repository/CI
-commands and actual features. Keep scope proportional to the affected projects.
+Read for final npm verification and feature-dependent checks. Use repository/CI
+commands scoped to affected projects.
 
-## Baseline and reproducibility
+## Baseline and checks
 
-Run source checks under the source-supported Node and package-manager versions.
-Record exact commands, configuration, environment and meaningful failure evidence.
-Do not label the same error message "unchanged baseline" if upgraded code or
-dependencies now cause it differently. Build failures that prevent a reliable
-migration starting point need an explained repair or blocker.
+Record source-supported runtimes, commands/configuration and failure evidence.
+Matching error text alone does not establish an unchanged baseline cause.
+Resolve/report failures preventing a reliable migration starting point.
 
-Validate installation against the resulting manifest/lockfile and effective
-package tree. Reproducible workspace installs are preliminary evidence; for npm,
-complete the final clean-directory check below before claiming SUCCESS.
-Run affected production builds, configured tests and lint in non-watch modes;
-include required libraries and configurations rather than only the default app.
-Do not install an unrelated linter/test framework when none is configured.
-
-After a fix, rerun checks whose results it invalidated. A test-only fix need not
-repeat unrelated builds; a shared dependency/configuration fix can invalidate
-builds and multiple test targets. Do not advance on unresolved upgrade-caused
-failures. Use existing tests and focused checks rather than creating a broad new
-test suite merely for the upgrade.
+Verify manifest/lock/installed-tree consistency; workspace installs are preliminary.
+Run affected production builds, configured non-watch tests/lint and necessary
+libraries/configurations. Do not introduce unrelated test/lint frameworks.
+Rerun checks invalidated by fixes; use existing tests/focused checks rather than
+creating a broad suite. Unresolved upgrade-caused failures prevent advancement.
 
 ## Final clean-directory npm verification
 
-An `npm ci` run in a workspace with existing node_modules can pass despite
-incomplete lockfile entries, including missing nested dependencies that fail in a
-fresh CI checkout. Before SUCCESS for an npm workspace, including a no-op, verify
-the final install inputs independently of the existing installation:
+Workspace npm ci can pass with incomplete nested lock entries that fail fresh CI.
+Before SUCCESS for npm, including no-ops:
 
-1. Create a fresh temporary directory outside the live workspace, within host
-   permissions. Copy final package.json and package-lock.json (or npm-shrinkwrap.json),
-   plus installation-relevant configuration such as .npmrc, workspace manifests,
-   local dependencies/archives, patches and lifecycle-script inputs. Preserve their
-   required relative layout.
-   Start with no node_modules anywhere in the copied inputs; do not reuse the live
-   dependency tree or point copied local dependencies back at the live workspace.
-2. Activate the project's supported Node version and CI's npm version. Determine
-   the actual CI version from its configuration/runtime rather than assuming the
-   host default or latest npm. Match CI's installation flags and environment that
-   affect dependency resolution. Keep authentication out of reports.
-3. Run a real `npm ci --ignore-scripts=false --dry-run=false` inside the temporary
-   copy, with any required CI flags. Confirm lifecycle scripts are enabled under
-   the effective configuration and their inputs are available. Do not disable
-   scripts to hide a failure. A dry run, lockfile-only operation or successful
-   install in the existing workspace does not satisfy this gate. Inspect scripts
-   and copy their inputs so they cannot modify user files or the live installation.
-4. Record the exact command, Node/npm versions, OS/platform and architecture,
-   lifecycle-script execution setting, exit status and result. Identify the final
-   inputs verified; later installation-relevant changes invalidate this evidence.
-   Prefer the native CI platform when available. Otherwise run the available
-   clean-directory check and disclose that native CI-platform verification was
-   unavailable; do not describe a different-platform result as native CI evidence.
-   If native verification is a required project check, its absence still prevents
-   SUCCESS.
+1. Create a fresh temporary copy outside the live workspace, within permissions.
+   Include final package.json, package-lock.json/npm-shrinkwrap.json, .npmrc and
+   other install configuration, workspace manifests, local dependencies/archives,
+   patches and lifecycle inputs, preserving relative layout. No node_modules in
+   any copied input; do not reference the live dependency tree/local inputs.
+2. Activate the selected final Node and effective CI npm version, including any
+   separate npm pin; verify actual versions against final configuration, not host
+   defaults/latest. Match resolution-affecting CI flags/env.
+   Inspect copied scripts/inputs to prevent live-workspace/user-file mutations.
+3. Run real `npm ci --ignore-scripts=false --dry-run=false` with required CI flags.
+   Confirm effective lifecycle-script execution and prerequisites. Do not hide
+   failures by disabling scripts. Dry runs, lockfile-only operations and existing-
+   workspace installs are insufficient.
+4. Report command, Node/npm, OS/platform/architecture, lifecycle setting, exit
+   status/result and verified inputs; later install-input changes invalidate proof.
+   Prefer native CI verification; disclose unavailability and the actual platform.
+   Missing native verification prevents SUCCESS when required by the project.
+   Keep authentication out of reports.
 
-If verification fails, retain the error and classify it before fixing it. Repair
-lockfile defects using the repository package manager's supported generation
-workflow in an isolated copy so the existing workspace installation is preserved.
-Review the resulting diff for unintended version, resolution or dependency changes
-before applying the repair in the protected upgrade context. Do not bypass peers
-or silently introduce unrelated dependency updates to obtain a pass.
+Use the executing version's [npm ci guidance](https://docs.npmjs.com/cli/commands/npm-ci).
+Other managers retain their supported workflow; this gate does not authorize conversion.
 
-If the lockfile is demonstrably defective and targeted repair still fails the
-fresh-directory install, allow controlled full regeneration:
+## Final runtime and publishing checks
 
-- Save the failed lockfile for comparison. Prepare another isolated copy of the
-  final installation inputs with no node_modules, and remove only its copied
-  lockfile. Preserve the original workspace installation and user files.
-- Run a real `npm install --ignore-scripts=false --dry-run=false` there with the
-  supported Node version, CI's npm version and applicable CI configuration/flags.
-  Preserve the requested Angular target and other declared version constraints.
-  This rebuilds the dependency resolution; record that full regeneration was used.
-- Compare the regenerated lockfile with the saved one. Review added nested entries
-  and all version, integrity, registry/resolution and dependency-tree changes.
-  Preserve unrelated resolutions where practical; explain any necessary changes
-  and verify coordinated package compatibility before applying the reviewed lockfile.
-- Rerun affected builds/tests/checks against the regenerated dependency graph in
-  isolation. Results from the previous workspace installation do not validate
-  dependencies whose resolution changed.
+Using final Node/package-manager versions and the verified clean installation,
+run configured builds and applicable package/publish dry runs, such as
+`npm publish --dry-run`. Supply inputs and inspect lifecycle effects in isolation;
+use supported commands and report versions, commands/results. Dry runs cannot
+verify publishing authentication (OIDC exchange/registry authorization); report
+it as unverified. Do not publish merely to validate.
 
-For either repair route, recopy the final reviewed inputs into another fresh
-directory with no node_modules and repeat the real npm ci. Lockfile generation
-with npm install is recovery work; it does not replace that final verification.
-Report regeneration and meaningful dependency changes with the validation evidence.
-If installation still fails, diagnose the remaining error and retain recovery
-evidence rather than repeatedly discarding lockfiles.
+## Repair and full regeneration
 
-A failed check ends an apparent no-op: any in-scope repair must first establish
-the protected mutation context. Honor explicit read-only requests and report a
-blocker if repair or required verification is outside scope/unavailable. Preserve
-user files and the original installation throughout. Keep other package managers
-on their supported workflow; this npm-specific gate does not authorize a conversion.
-Use the executing npm version's [official npm ci guidance](https://docs.npmjs.com/cli/commands/npm-ci).
+Retain/classify the error. Repair lock defects in isolation using the repository
+manager's generation workflow, preserving the live installation. Review changes
+before applying them in the protected upgrade context; do not bypass peers or
+silently update unrelated dependencies.
 
-## Feature-driven acceptance
+If a demonstrated lock defect survives targeted repair:
 
-- **Browser behavior:** Exercise representative startup, routing, forms and async
-  UI updates when changed APIs/defaults affect them. Check console/runtime errors.
-  Preserve the established zone/zoneless mode and component change-detection
-  behavior unless a change is required or requested; verify migration output.
-  A new-project default does not by itself justify changing an existing app.
-- **SSR/hydration/prerender:** Run the actual server or applicable rendering checks,
-  verify expected rendered HTML and hydration without new errors, and check
-  relevant routes/host configuration. A successful server build or HTTP response
-  can still hide fallback to client rendering. Test prerendered output when used.
-- **PWA:** Verify service-worker generation, asset/output paths, registration and
-  important offline/update behavior when migrations affect them. Use the existing
-  local PWA harness where available; distinguish generation from runtime validation.
-- **i18n:** Include affected localized production configurations and
-  @angular/localize compatibility. Check translation errors, generated locale
-  paths and base URLs consumed by deployment.
-- **Material/CDK:** Inspect affected themes, overlays and interactions; review
-  migration TODOs and visual differences. Do not accept regenerated golden files
-  without reviewing whether the change is intended.
-- **Libraries:** Validate production packages/entry points and an appropriate
-  consumer build against their declared compatibility. Source aliases can conceal
-  packaging or peer-dependency problems.
-- **Deployment/custom builders:** Check changed output layout, server entry point,
-  assets, baseHref, stylesheet processing, custom build features and scripts that
-  consume them. Required compatibility changes include deployment configuration
-  when a migration changes the artifact contract. Do not deploy merely to validate.
-- **Supported browsers:** Compare the repository's required browsers/Browserslist
-  with the target's [official browser support](https://angular.dev/reference/versions).
-  Report a removed required browser as a scope/compatibility decision rather than
-  silently changing support or adding speculative polyfills.
+- Save the failed lock for comparison. In another fresh copy without node_modules,
+  remove only the copied lockfile. Preserve user files/original installation.
+- Run real `npm install --ignore-scripts=false --dry-run=false` with supported Node,
+  CI's npm and applicable configuration/flags. Preserve requested Angular precision
+  and declared constraints; record full regeneration.
+- Review added nested entries plus version, integrity, registry/resolution and tree
+  changes. Preserve unrelated resolutions where practical, explain necessary
+  changes and verify coordinated compatibility before applying the reviewed lock.
+- Rerun affected builds/tests/checks against the regenerated graph in isolation;
+  previous-workspace results do not validate changed resolutions.
 
-Use applicable official release notes to choose these checks. New change-detection
-defaults, security patches, removed builders and preview API changes can require
-runtime checks even when TypeScript compiles.
+After either repair, recopy final reviewed inputs into another fresh directory
+without node_modules and repeat real npm ci. npm install generation is recovery,
+not final verification. Report regeneration/dependency changes; investigate
+remaining failures with retained evidence instead of repeatedly discarding locks.
 
-## Failed or unavailable checks
+A failed check ends an apparent no-op; permitted repair first needs protected
+mutation. Honor read-only scope and report unavailable/out-of-scope verification
+or repairs as blockers. Keep live installation/user files intact throughout.
 
-Do not hide errors, disable compiler/lint checks, skip assertions, loosen budgets
-or remove coverage merely to obtain a pass. If official guidance offers a fallback
-that weakens checking or changes behavior, assess its scope, document the reason
-and seek a user choice only when material risk or intended behavior is unresolved.
+## Feature checks
 
-Distinguish pass, fail, unchanged baseline failure, not configured and not run with
-reason. Explain unavailable browsers, credentials or infrastructure and run useful
-local checks. Missing a required build/runtime check yields incomplete evidence;
-an optional expensive check need not block when its omission is justified. A no-op
-keeps the live installation and user files untouched, but still needs the isolated
-npm verification above. Missing prerequisites or an unsuccessful required clean
-install prevent SUCCESS; any repair follows the protected mutation/recovery rules.
+Choose applicable checks from official release notes, including minor/patch,
+preview/security and change-detection changes that compile successfully.
+
+| Feature | Required evidence when affected |
+| --- | --- |
+| Browser | Startup, routing, forms, async updates and console errors; preserve zone/zoneless and change-detection behavior unless required/requested. New-app defaults alone do not justify conversion. |
+| SSR/hydration/prerender | Actual rendered HTML, hydration, routes/host configuration and prerender output; build success or HTTP responses can conceal client-rendering fallback. |
+| PWA | Worker generation, asset paths/registration and affected offline/update behavior using existing harnesses; generation alone is insufficient runtime evidence. |
+| i18n | Affected localized production builds, localize compatibility, translation errors, locale output/base URLs. |
+| Material/CDK | Themes, DOM/overlays/interactions, migration TODOs and intended visual differences; review golden changes. |
+| Libraries | Production packaging/entry points and appropriate consumer builds; source aliases can conceal peer/packaging failures. |
+| Deployment/builders | Output layout, server entry, assets/baseHref, styles/custom features and consuming scripts. Adjust configuration for changed artifact contracts; do not deploy merely to validate. |
+| Supported browsers | Compare required Browserslist/support with [target policy](https://angular.dev/reference/versions). Resolve dropped requirements without silently changing support or speculative polyfills. |
+
+## Results and limitations
+
+Never hide errors or weaken compiler/lint checks, assertions, coverage or budgets,
+skip tests or regenerate snapshots merely to pass. Explain justified changes;
+official fallback options need assessment and a user choice only for unresolved
+material risk/behavior.
+
+Distinguish pass, fail, unchanged baseline failure, not configured and not run
+with reason. Document missing infrastructure/credentials/browsers and run useful
+local checks. Missing required build/runtime/clean-install evidence prevents
+SUCCESS; justified optional expensive skips need not block.
