@@ -1,0 +1,51 @@
+<div class="page page-section">
+  <div class="confirmation">
+    @if (order(); as item) {
+      <span class="confirmation-check"><app-icon name="check" /></span>
+      <p class="eyebrow">A good day for good tech</p>
+      <h1>You’re all set.</h1>
+      <p class="muted">
+        Your simulated order has been placed.<br />No payment has been taken and no products will be
+        shipped.
+      </p>
+      <div class="panel receipt">
+        <div class="receipt-heading">
+          <strong>{{ item.id }}</strong
+          ><span>{{ item.placedAt | date: 'medium' }}</span>
+        </div>
+        @for (line of item.items; track line.product.id) {
+          <div class="receipt-line">
+            <span>{{ line.quantity }} × {{ line.product.name }}</span
+            ><span>{{ line.lineTotalCents / 100 | currency: 'EUR' }}</span>
+          </div>
+        }
+        <div class="total-line">
+          <span>Subtotal</span><span>{{ item.subtotalCents / 100 | currency: 'EUR' }}</span>
+        </div>
+        <div class="total-line">
+          <span>{{ item.shipping.name }}</span
+          ><span>{{ item.shippingCents / 100 | currency: 'EUR' }}</span>
+        </div>
+        @if (item.deliveryInsurance) {
+          <div class="total-line">
+            <span>Delivery insurance</span>
+            <span>{{ item.deliveryInsuranceCents / 100 | currency: 'EUR' }}</span>
+          </div>
+        }
+        <div class="total-line">
+          <span>{{ item.warranty.name }}</span>
+          <span>{{ item.warrantyCents / 100 | currency: 'EUR' }}</span>
+        </div>
+        <div class="total-line grand">
+          <span>Order total</span><span>{{ item.totalCents / 100 | currency: 'EUR' }}</span>
+        </div>
+        <p class="small muted">Simulated order · EUR · Taxes included</p>
+      </div>
+      <a routerLink="/" class="button">Keep exploring <app-icon /></a>
+    } @else {
+      <h1>Order not found.</h1>
+      <p class="muted">This order may have been reset or belongs to a different browser session.</p>
+      <a routerLink="/" class="button">Back to the shop <app-icon /></a>
+    }
+  </div>
+</div>

@@ -1,0 +1,63 @@
+<div class="page page-section">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Shop</a><span aria-hidden="true">/</span
+    ><span>{{ product()?.name ?? 'Product not found' }}</span>
+  </nav>
+  @if (product(); as item) {
+    <div class="product-layout">
+      <div class="detail-art">
+        <img
+          [ngSrc]="'/assets/products/' + item.image + '.svg'"
+          width="600"
+          height="500"
+          priority
+          [alt]="item.name + ' in ' + item.color"
+        />
+      </div>
+      <div class="detail-copy">
+        <p class="eyebrow">{{ item.category }} / Everyday essentials</p>
+        <h1>{{ item.name }}</h1>
+        <p class="tagline">{{ item.description }}</p>
+        <div class="price">
+          {{ item.priceCents / 100 | currency: 'EUR' }} <span>Taxes included</span>
+        </div>
+        <p class="description">{{ item.detail }}</p>
+        <div class="color-label"><span></span> {{ item.color }}</div>
+        <div class="purchase-row">
+          <div class="quantity">
+            <button
+              class="icon-button"
+              [disabled]="quantity() <= 1"
+              (click)="quantity.set(quantity() - 1)"
+              aria-label="Decrease quantity"
+            >
+              <app-icon name="minus" /></button
+            ><span aria-live="polite">{{ quantity() }}</span
+            ><button
+              class="icon-button"
+              [disabled]="quantity() >= 99"
+              (click)="quantity.set(quantity() + 1)"
+              aria-label="Increase quantity"
+            >
+              <app-icon name="plus" />
+            </button>
+          </div>
+          <button class="button" (click)="add()">Add to bag <app-icon name="plus" /></button>
+        </div>
+        <div class="notice" role="status">{{ notice() }}</div>
+        <a routerLink="/cart" class="text-link">View your bag <app-icon /></a>
+        <ul class="features">
+          @for (feature of item.features; track feature) {
+            <li><app-icon name="check" />{{ feature }}</li>
+          }
+        </ul>
+        <p class="delivery"><app-icon name="truck" /> Delivery from €12. Free store collection.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <h1>Product not found.</h1>
+      <a routerLink="/" class="button">Explore all products <app-icon /></a>
+    </div>
+  }
+</div>

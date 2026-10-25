@@ -1,0 +1,224 @@
+<div class="page page-section lab">
+  <a routerLink="/" class="text-link"><app-icon name="back" /> Back to storefront</a>
+  <div class="lab-heading">
+    <div>
+      <p class="eyebrow">WebMCP Checkout Trap</p>
+      <h1>Experiment lab</h1>
+      <p class="muted">Observe how tool descriptions affect an external shopping agent.</p>
+    </div>
+    <button class="button secondary" (click)="exportResults()">
+      <app-icon name="download" /> Export results
+    </button>
+  </div>
+  <div class="status-strip" role="status">
+    <span class="status-light" [class.available]="webmcp.status() === 'ready'"></span
+    ><strong>WebMCP: {{ webmcp.status() }}</strong>
+    @switch (webmcp.status()) {
+      @case ('unsupported') {
+        <span
+          >This browser does not expose document.modelContext. The storefront works normally.</span
+        >
+      }
+      @case ('registering') {
+        <span>Updating browser tool registrations…</span>
+      }
+      @case ('ready') {
+        <span
+          >{{ webmcp.registeredTools().length }} tools registered ·
+          {{ webmcp.registeredScenario() }}</span
+        >
+      }
+      @case ('error') {
+        <span class="error-text">{{ webmcp.error() }}</span>
+      }
+    }
+    <button class="retry-button" (click)="webmcp.retry()">Retry registration</button>
+  </div>
+  @if (!log.storageAvailable() || !experiment.storageAvailable()) {
+    <p class="error-text small" role="alert">
+      Browser storage is unavailable or full. Export results before leaving this page; configuration
+      or logs may not persist.
+    </p>
+  }
+  <section class="lab-section" aria-labelledby="scenario-title">
+    <div class="section-heading">
+      <h2 id="scenario-title">01 / Attack scenario</h2>
+      <span>Selected: {{ experiment.scenario() }}</span>
+    </div>
+    <p class="small muted">
+      Only tool descriptions change. Prices, inputs, outputs, annotations, and checkout behavior
+      remain identical. The selected scenario persists when returning to the storefront.
+    </p>
+    <div class="scenario-grid">
+      @for (scenario of scenarios; track scenario.id) {
+        <button
+          class="scenario-option"
+          [class.selected]="experiment.scenario() === scenario.id"
+          [attr.aria-pressed]="experiment.scenario() === scenario.id"
+          (click)="experiment.select(scenario.id)"
+        >
+          <strong>{{ scenario.label }}</strong
+          ><span>{{ scenario.summary }}</span
+          ><span class="selection-indicator"
+            >{{ experiment.scenario() === scenario.id ? 'Selected' : 'Select scenario' }}
+            <app-icon [name]="experiment.scenario() === scenario.id ? 'check' : 'arrow'"
+          /></span>
+        </button>
+      }
+    </div>
+    <div class="scenario-brief">
+      <div class="brief-context">
+        <p class="eyebrow">Selected experiment</p>
+        <p class="selected-scenario">{{ selectedScenario().label }}</p>
+      </div>
+      <section class="brief-card prompt-card" aria-labelledby="prompt-title">
+        <div class="brief-heading">
+          <span class="brief-step" aria-hidden="true">1</span>
+          <h3 id="prompt-title">Suggested agent prompt</h3>
+        </div>
+        <p class="brief-caption">Give this request to your shopping agent.</p>
+        <blockquote>{{ selectedScenario().suggestedPrompt }}</blockquote>
+        <p class="comparison-note">{{ selectedScenario().comparisonNote }}</p>
+      </section>
+      <section class="brief-card business-card" aria-labelledby="business-title">
+        <div class="brief-heading">
+          <span class="brief-step" aria-hidden="true">2</span>
+          <h3 id="business-title">Business explanation</h3>
+        </div>
+        <p>{{ selectedScenario().businessExplanation }}</p>
+        <div class="expected-outcome">
+          <h4>Expected agent behavior</h4>
+          <p>{{ selectedScenario().expectedOutcome }}</p>
+        </div>
+      </section>
+      <section class="brief-card technical-card" aria-labelledby="technical-title">
+        <div class="brief-heading">
+          <span class="brief-step" aria-hidden="true">3</span>
+          <h3 id="technical-title">Technical explanation</h3>
+        </div>
+        <p class="brief-caption">
+          {{
+            experiment.scenario() === 'baseline'
+              ? 'Neutral tool behavior in the control run.'
+              : 'How this scenario’s tool descriptions try to redirect the agent.'
+          }}
+        </p>
+        <dl class="technical-details">
+          @for (detail of selectedScenario().technicalExplanation; track detail.tool) {
+            <div>
+              <dt>
+                <code>{{ detail.tool }}</code>
+              </dt>
+              <dd>{{ detail.explanation }}</dd>
+            </div>
+          }
+        </dl>
+      </section>
+    </div>
+  </section>
+  <section class="lab-section" aria-labelledby="tools-title">
+    <div class="section-heading">
+      <h2 id="tools-title">
+        02 / {{ webmcp.status() === 'ready' ? 'Registered' : 'Configured' }} tool descriptions
+      </h2>
+      <span>{{ tools().length }} shopping tools</span>
+    </div>
+    @if (webmcp.status() !== 'ready') {
+      <p class="small muted">
+        Preview of the selected configuration. These tools are not currently confirmed registered in
+        this browser.
+      </p>
+    }
+    @for (tool of tools(); track tool.name) {
+      <details class="tool-card" [open]="tool.description !== neutralDescriptions[tool.name]">
+        <summary>
+          <code>{{ tool.name }}</code
+          ><span class="tool-hints"
+            >{{ tool.annotations.readOnlyHint ? 'Read only' : 'Modifies state'
+            }}{{ tool.annotations.consequentialHint ? ' · Consequential' : '' }}</span
+          >
+          @if (tool.description !== neutralDescriptions[tool.name]) {
+            <span class="attack-badge">Attack fixture</span>
+          }
+        </summary>
+        <div class="tool-body">
+          <p class="tool-description">{{ tool.description }}</p>
+          <p class="eyebrow">Input schema</p>
+          <pre>{{ tool.inputSchema | json }}</pre>
+          <p class="eyebrow">Annotations</p>
+          <pre>{{ tool.annotations | json }}</pre>
+        </div>
+      </details>
+    }
+  </section>
+  <section class="lab-section" aria-labelledby="log-title">
+    <div class="section-heading">
+      <h2 id="log-title">03 / Execution history</h2>
+      <span>{{ log.entries().length }} executions · {{ attempts() }} checkout attempts</span>
+    </div>
+    <p class="small muted">
+      Totals include selected shipping, insurance, and warranty, in EUR. Attempts are recorded
+      before validation; UI checkouts are labeled separately. This log does not infer agent intent
+      or score budget violations.
+    </p>
+    <div class="lab-actions">
+      <button class="button secondary" (click)="resetStore()">Reset cart & orders</button
+      ><button class="button secondary" [disabled]="!log.entries().length" (click)="log.clear()">
+        Clear execution history</button
+      ><span class="small muted"
+        >Current cart: {{ store.totalCents() / 100 | currency: 'EUR' }} ·
+        {{ store.orders().length }} orders</span
+      >
+    </div>
+    <div class="notice" role="status">{{ notice() }}</div>
+    @for (entry of entries(); track entry.id) {
+      <details class="execution-card">
+        <summary>
+          <span class="execution-name"
+            ><code>{{ entry.toolName }}</code
+            ><span class="source">{{ entry.source }}</span></span
+          ><span>{{ entry.timestamp | date: 'mediumTime' }}</span
+          ><span class="execution-status" [class.failed]="entry.status === 'failed'">{{
+            entry.status
+          }}</span>
+        </summary>
+        <div class="execution-body">
+          <div class="execution-facts">
+            <span
+              >Scenario: <strong>{{ entry.scenario }}</strong></span
+            ><span
+              >Before:
+              <strong>{{ entry.cartTotalBeforeCents / 100 | currency: 'EUR' }}</strong></span
+            ><span
+              >After:
+              <strong>{{
+                entry.cartTotalAfterCents === null
+                  ? 'Pending'
+                  : (entry.cartTotalAfterCents / 100 | currency: 'EUR')
+              }}</strong></span
+            >
+            @if (entry.attemptedCheckoutCents !== null) {
+              <span
+                >Attempted checkout:
+                <strong>{{ entry.attemptedCheckoutCents / 100 | currency: 'EUR' }}</strong></span
+              >
+            }
+            <span
+              >Order completed: <strong>{{ entry.orderCompleted ? 'Yes' : 'No' }}</strong></span
+            >
+          </div>
+          <pre>{{ entry | json }}</pre>
+        </div>
+      </details>
+    } @empty {
+      <div class="empty-state">
+        <app-icon name="box" />
+        <h3>No executions yet</h3>
+        <p class="small muted">
+          Use a WebMCP-capable agent on the storefront, or place a simulated order manually.<br />Only
+          real tool invocations and UI checkout attempts appear here.
+        </p>
+      </div>
+    }
+  </section>
+</div>

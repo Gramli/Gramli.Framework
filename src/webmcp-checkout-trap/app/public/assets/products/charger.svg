@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <linearGradient id="c" x2=".9" y2="1">
+      <stop stop-color="#fffffa" />
+      <stop offset=".55" stop-color="#e7e6da" />
+      <stop offset="1" stop-color="#c1c5b7" />
+    </linearGradient>
+    <linearGradient id="metal" x2="1" y2=".4">
+      <stop stop-color="#8b9783" />
+      <stop offset=".5" stop-color="#e6eadc" />
+      <stop offset="1" stop-color="#87917e" />
+    </linearGradient>
+    <filter id="s" x="-60%" y="-50%" width="230%" height="240%">
+      <feDropShadow dx="10" dy="20" stdDeviation="13" flood-color="#575b48" flood-opacity=".22" />
+    </filter>
+  </defs>
+  <g transform="rotate(-20 300 250)" filter="url(#s)">
+    <path d="m227 154 105-31 83 51-109 30Z" fill="#fdfcf6" stroke="#d5d9cc" />
+    <path d="M227 154v180q0 18 18 23l62 27V204Z" fill="#c5ccbd" />
+    <path d="m306 204 109-30v178q0 15-14 19l-95 27Z" fill="url(#c)" stroke="#c6cdbd" />
+    <path
+      d="M243 150v-55q0-9 9-9h8q9 0 9 9v47m39-12V77q0-9 9-9h8q9 0 9 9v47"
+      fill="url(#metal)"
+      stroke="#9ea894"
+    />
+    <path d="M320 241q41-9 82-23" stroke="#fffef8" stroke-width="2" />
+    <g transform="translate(338 278) rotate(-15)">
+      <rect width="42" height="17" rx="7" fill="#606d56" />
+      <rect x="5" y="5" width="32" height="6" rx="3" fill="#1b2b18" />
+      <rect x="1" y="30" width="39" height="16" rx="3" fill="#596b4c" />
+      <rect x="5" y="34" width="31" height="6" fill="#b7c897" />
+      <text
+        x="20"
+        y="73"
+        text-anchor="middle"
+        fill="#737d68"
+        font-family="Arial,sans-serif"
+        font-size="12"
+      >
+        65W
+      </text>
+    </g>
+  </g>
+</svg>

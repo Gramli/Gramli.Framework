@@ -1,0 +1,24 @@
+h1 .muted {
+  font-weight: 400;
+}
+.panel h2 {
+  font-size: 21px;
+  margin-bottom: 25px;
+}
+.continue {
+  margin-top: 25px;
+}
+.note {
+  margin: 18px 0;
+  line-height: 1.8;
+}
+.demo-note {
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  display: flex;
+  gap: 13px;
+  align-items: center;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--muted);
+}

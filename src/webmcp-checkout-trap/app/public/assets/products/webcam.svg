@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <linearGradient id="c" x2=".7" y2="1">
+      <stop stop-color="#59665d" />
+      <stop offset=".4" stop-color="#303d34" />
+      <stop offset="1" stop-color="#18271d" />
+    </linearGradient>
+    <radialGradient id="lens">
+      <stop stop-color="#628b94" />
+      <stop offset=".25" stop-color="#213d4c" />
+      <stop offset=".55" stop-color="#0d2027" />
+      <stop offset=".7" stop-color="#3b5456" />
+      <stop offset=".8" stop-color="#14292a" />
+      <stop offset="1" stop-color="#0c1713" />
+    </radialGradient>
+    <filter id="s" x="-50%" y="-50%" width="200%" height="240%">
+      <feDropShadow dx="10" dy="18" stdDeviation="13" flood-color="#293f30" flood-opacity=".25" />
+    </filter>
+  </defs>
+  <g transform="rotate(-10 300 260)" filter="url(#s)">
+    <path d="M263 267v49l-40 42v25h166v-25l-42-42v-49" fill="#273a2d" />
+    <path d="m251 333 52 29 61-28 23 24H224Z" fill="#64735d" />
+    <path d="m224 359 79 16 84-16v17l-84 19-79-19Z" fill="#203425" />
+    <rect
+      x="145"
+      y="157"
+      width="315"
+      height="147"
+      rx="62"
+      fill="url(#c)"
+      stroke="#6b7a6a"
+      stroke-width="2"
+    />
+    <rect x="158" y="169" width="288" height="120" rx="49" fill="#26392b" />
+    <circle cx="302" cy="229" r="58" fill="#1b2b20" stroke="#6f806a" stroke-width="3" />
+    <circle cx="302" cy="229" r="44" fill="url(#lens)" />
+    <circle cx="302" cy="229" r="26" stroke="#416572" stroke-width="2" fill="none" />
+    <ellipse cx="289" cy="215" rx="11" ry="8" fill="#b8dcd6" opacity=".25" />
+    <circle cx="311" cy="236" r="5" fill="#67a4a7" opacity=".5" />
+    <path d="M186 212v35m6-35v35m6-35v35m6-35v35" stroke="#596d53" stroke-width="2" />
+    <circle cx="404" cy="230" r="4" fill="#b2d58b" />
+    <rect x="256" y="151" width="91" height="12" rx="6" fill="#7f8d75" />
+  </g>
+</svg>

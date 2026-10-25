@@ -1,0 +1,145 @@
+<div class="page page-section">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Shop</a><span aria-hidden="true">/</span><a routerLink="/cart">Your bag</a
+    ><span aria-hidden="true">/</span><span>Checkout</span>
+  </nav>
+  <p class="eyebrow">One last step</p>
+  <h1>Make it yours.</h1>
+  @if (store.itemCount()) {
+    <div class="two-column">
+      <div>
+        <section>
+          <div class="step-heading">
+            <span>01</span>
+            <h2>Your essentials</h2>
+            <a routerLink="/cart">Edit bag</a>
+          </div>
+          <app-cart-items [editable]="false" />
+        </section>
+        <section class="shipping-section">
+          <div class="step-heading">
+            <span>02</span>
+            <h2>Delivery, your way</h2>
+          </div>
+          <fieldset>
+            <legend class="sr-only">Select a shipping method</legend>
+            @for (method of store.shippingMethods; track method.id) {
+              <label class="shipping-option" [class.chosen]="store.shipping().id === method.id"
+                ><input
+                  type="radio"
+                  [value]="method.id"
+                  [formField]="shippingForm.id"
+                  (change)="store.setShipping(method.id)"
+                /><span class="shipping-label"
+                  ><strong>{{ method.name }}</strong
+                  ><span>{{ method.description }}</span></span
+                ><strong>{{ method.priceCents / 100 | currency: 'EUR' }}</strong></label
+              >
+            }
+          </fieldset>
+          <fieldset class="protection-options" aria-describedby="insurance-help">
+            <legend>Delivery insurance <span class="muted">Optional</span></legend>
+            <p id="insurance-help" class="small muted">
+              Protection against loss or damage in transit, charged once per delivery.
+              @if (store.shipping().id === 'collection') {
+                Unavailable for store collection.
+              }
+            </p>
+            <label
+              class="shipping-option"
+              [class.chosen]="store.deliveryInsurance()"
+              [class.unavailable]="store.shipping().id === 'collection'"
+            >
+              <input
+                #insuranceInput
+                type="checkbox"
+                [formField]="insuranceForm.enabled"
+                (change)="store.setDeliveryInsurance(insuranceInput.checked)"
+              />
+              <span class="shipping-label">
+                <strong>Add delivery insurance</strong>
+                <span>Keep unchecked to continue without insurance.</span>
+              </span>
+              <strong>+{{ store.deliveryInsurancePriceCents / 100 | currency: 'EUR' }}</strong>
+            </label>
+          </fieldset>
+          <fieldset class="protection-options" aria-describedby="warranty-help">
+            <legend>Warranty</legend>
+            <p id="warranty-help" class="small muted">
+              2 years included. Optional extensions provide 3, 4, or 5 years of total coverage. The
+              one-time price shown is per item and applies to every item in your bag.
+            </p>
+            @for (option of store.warrantyOptions; track option.years) {
+              <label
+                class="shipping-option"
+                [class.chosen]="store.warranty().years === option.years"
+              >
+                <input
+                  type="radio"
+                  [value]="option.years.toString()"
+                  [formField]="warrantyForm.years"
+                  (change)="store.setWarranty(option.years)"
+                />
+                <span class="shipping-label">
+                  <strong>{{ option.name }}</strong>
+                  <span>{{
+                    option.years === 2 ? 'Included coverage' : 'Optional extended warranty'
+                  }}</span>
+                </span>
+                <strong>
+                  @if (option.years === 2) {
+                    Included
+                  } @else {
+                    +{{ option.priceCents / 100 | currency: 'EUR' }} / item
+                  }
+                </strong>
+              </label>
+            }
+          </fieldset>
+        </section>
+      </div>
+      <aside class="panel">
+        <h2>Order summary</h2>
+        <div class="total-line">
+          <span>Subtotal ({{ store.itemCount() }} items)</span
+          ><span>{{ store.subtotalCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        <div class="total-line">
+          <span>{{ store.shipping().name }}</span
+          ><span>{{ store.shippingCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        @if (store.deliveryInsurance()) {
+          <div class="total-line">
+            <span>Delivery insurance</span>
+            <span>{{ store.deliveryInsuranceCents() / 100 | currency: 'EUR' }}</span>
+          </div>
+        }
+        <div class="total-line">
+          <span>{{ store.warranty().name }}</span>
+          <span>{{ store.warrantyCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        <div class="total-line grand" aria-live="polite">
+          <span>Total</span><span>{{ store.totalCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        <p class="small muted">
+          All prices in EUR. Taxes and selected extras included.<br />No payment details required.
+        </p>
+        <button class="button full" (click)="placeOrder()">
+          Place simulated order <app-icon />
+        </button>
+        <p class="error-text small" role="alert">{{ error() }}</p>
+        <div class="checkout-note">
+          <app-icon name="shield" /><span
+            >A complete shopping experience,<br />with no real payment or delivery.</span
+          >
+        </div>
+      </aside>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <h2>Your bag is empty.</h2>
+      <p class="muted">Add something you love before checking out.</p>
+      <a routerLink="/" class="button">Back to the shop <app-icon /></a>
+    </div>
+  }
+</div>

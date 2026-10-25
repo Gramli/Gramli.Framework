@@ -1,0 +1,50 @@
+<div class="cart-items">
+  @for (item of store.items(); track item.product.id) {
+    <article class="cart-item">
+      <a [routerLink]="['/product', item.product.id]" class="cart-image"
+        ><img
+          [ngSrc]="'/assets/products/' + item.product.image + '.svg'"
+          width="112"
+          height="112"
+          [alt]="item.product.name"
+      /></a>
+      <div class="cart-info">
+        <a [routerLink]="['/product', item.product.id]" class="item-name">{{
+          item.product.name
+        }}</a>
+        <p>{{ item.product.color }} · {{ item.product.priceCents / 100 | currency: 'EUR' }} each</p>
+        @if (editable()) {
+          <div class="item-actions">
+            <div class="quantity">
+              <button
+                class="icon-button"
+                (click)="store.setQuantity(item.product.id, item.quantity - 1)"
+                [attr.aria-label]="'Decrease quantity of ' + item.product.name"
+              >
+                <app-icon name="minus" /></button
+              ><span [attr.aria-label]="'Quantity: ' + item.quantity">{{ item.quantity }}</span
+              ><button
+                class="icon-button"
+                [disabled]="item.quantity >= 99"
+                (click)="store.setQuantity(item.product.id, item.quantity + 1)"
+                [attr.aria-label]="'Increase quantity of ' + item.product.name"
+              >
+                <app-icon name="plus" />
+              </button>
+            </div>
+            <button
+              class="remove-button"
+              (click)="store.removeFromCart(item.product.id)"
+              [attr.aria-label]="'Remove ' + item.product.name"
+            >
+              Remove
+            </button>
+          </div>
+        } @else {
+          <span class="small muted">Quantity: {{ item.quantity }}</span>
+        }
+      </div>
+      <strong class="line-price">{{ item.lineTotalCents / 100 | currency: 'EUR' }}</strong>
+    </article>
+  }
+</div>

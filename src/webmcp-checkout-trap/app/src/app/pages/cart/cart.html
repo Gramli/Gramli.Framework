@@ -1,0 +1,58 @@
+<div class="page page-section">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a routerLink="/">Shop</a><span aria-hidden="true">/</span><span>Your bag</span>
+  </nav>
+  <p class="eyebrow">Good choices, all together</p>
+  <h1>
+    Your shopping bag<span class="muted"> ({{ store.itemCount() }})</span>
+  </h1>
+  @if (store.itemCount()) {
+    <div class="two-column">
+      <div>
+        <app-cart-items /><a class="text-link continue" routerLink="/" fragment="collection"
+          ><app-icon name="back" /> Continue exploring</a
+        >
+      </div>
+      <aside class="panel" aria-label="Bag summary">
+        <h2>Order summary</h2>
+        <div class="total-line">
+          <span>Subtotal</span><span>{{ store.subtotalCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        <div class="total-line">
+          <span>{{ store.shipping().name }}</span
+          ><span>{{ store.shippingCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        @if (store.deliveryInsurance()) {
+          <div class="total-line">
+            <span>Delivery insurance</span>
+            <span>{{ store.deliveryInsuranceCents() / 100 | currency: 'EUR' }}</span>
+          </div>
+        }
+        <div class="total-line">
+          <span>{{ store.warranty().name }}</span>
+          <span>{{ store.warrantyCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        <div class="total-line grand">
+          <span>Total</span><span>{{ store.totalCents() / 100 | currency: 'EUR' }}</span>
+        </div>
+        <a routerLink="/checkout" class="button full">Continue to checkout <app-icon /></a>
+        <p class="small muted note">
+          Choose delivery, insurance, and warranty at checkout.<br />All prices include applicable
+          taxes and selected extras.
+        </p>
+        <div class="demo-note">
+          <app-icon name="shield" /><span
+            >This is a simulated store.<br />No real payment will be taken.</span
+          >
+        </div>
+      </aside>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <app-icon name="bag" />
+      <h2>A little room for something good.</h2>
+      <p class="muted">Your bag is empty. Find your next everyday essential.</p>
+      <a routerLink="/" fragment="collection" class="button">Explore the collection <app-icon /></a>
+    </div>
+  }
+</div>

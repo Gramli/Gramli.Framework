@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <linearGradient id="case" x2=".4" y2="1">
+      <stop stop-color="#fffefa" />
+      <stop offset=".7" stop-color="#e2e0d6" />
+      <stop offset="1" stop-color="#bfc0b3" />
+    </linearGradient>
+    <linearGradient id="bud" x2="1" y2="1">
+      <stop stop-color="#fff" />
+      <stop offset=".6" stop-color="#e6e4dc" />
+      <stop offset="1" stop-color="#b8bdb1" />
+    </linearGradient>
+    <filter id="s" x="-50%" y="-40%" width="200%" height="200%">
+      <feDropShadow dx="8" dy="16" stdDeviation="13" flood-color="#5d5b49" flood-opacity=".22" />
+    </filter>
+  </defs>
+  <g filter="url(#s)" transform="rotate(-12 300 270)">
+    <path
+      d="M180 244q0-42 45-42h154q44 0 44 42v72q0 53-53 53H233q-53 0-53-53Z"
+      fill="url(#case)"
+      stroke="#c7c8bd"
+      stroke-width="2"
+    />
+    <ellipse cx="302" cy="242" rx="122" ry="43" fill="#d0d3c6" />
+    <ellipse cx="302" cy="240" rx="112" ry="32" fill="#b7bfaf" />
+    <ellipse cx="257" cy="239" rx="28" ry="17" fill="#8d9885" />
+    <ellipse cx="347" cy="239" rx="28" ry="17" fill="#8d9885" />
+    <path d="M188 269q114 44 226 0" fill="none" stroke="#fdfcf6" stroke-width="3" />
+    <circle cx="302" cy="322" r="3" fill="#6b8967" />
+    <path
+      d="M191 239v-59q0-37 37-37h147q37 0 37 37v59q-107-57-221 0Z"
+      fill="url(#case)"
+      stroke="#c5c8bc"
+      stroke-width="2"
+    />
+    <path d="M205 215v-32q0-24 28-24h135q28 0 28 24v32q-92-35-191 0Z" fill="#d4d9cc" />
+    <g transform="rotate(-18 236 128)">
+      <rect x="221" y="103" width="29" height="95" rx="14" fill="url(#bud)" />
+      <ellipse cx="235" cy="100" rx="33" ry="25" fill="url(#bud)" />
+      <ellipse cx="212" cy="99" rx="7" ry="13" fill="#50594c" />
+      <rect x="229" y="163" width="5" height="17" rx="2" fill="#969e90" />
+    </g>
+    <g transform="rotate(24 362 126)">
+      <rect x="347" y="104" width="29" height="95" rx="14" fill="url(#bud)" />
+      <ellipse cx="360" cy="100" rx="33" ry="25" fill="url(#bud)" />
+      <ellipse cx="382" cy="99" rx="7" ry="13" fill="#50594c" />
+      <rect x="358" y="162" width="5" height="17" rx="2" fill="#969e90" />
+    </g>
+  </g>
+</svg>
