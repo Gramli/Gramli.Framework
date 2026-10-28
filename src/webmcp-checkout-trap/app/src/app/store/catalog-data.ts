@@ -19,7 +19,7 @@ export const products: Product[] = [
     id: 'arc-headphones',
     name: 'Arc Wireless Headphones',
     category: 'Audio',
-    priceCents: 9500,
+    priceCents: 8900,
     description: 'Less noise. More of what you love.',
     detail:
       'Find your focus with comfortable over-ear cushions, active noise cancellation, and warm, balanced sound. Your everyday escape, wherever the day takes you.',
