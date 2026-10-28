@@ -1,0 +1,51 @@
+﻿<a class="skip-link" href="#main-content">Skip to content</a>
+<header class="site-header">
+  <div class="announcement">
+    Good tech. Everyday possibilities. <span>Delivery from €12 · Free store collection</span>
+  </div>
+  <div class="header-inner">
+    <a routerLink="/" class="brand" aria-label="Current home"
+      ><span class="brand-mark"><app-icon name="bolt" /></span>current<span class="brand-dot"
+        >.</span
+      ></a
+    >
+    <nav class="main-nav" aria-label="Main navigation">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        >Shop all</a
+      >
+      <a routerLink="/" [queryParams]="{ category: 'Audio' }" fragment="collection">Audio</a>
+      <a routerLink="/" [queryParams]="{ category: 'Workspace' }" fragment="collection"
+        >Workspace</a
+      >
+      <a routerLink="/" [queryParams]="{ category: 'Accessories' }" fragment="collection"
+        >Accessories</a
+      >
+    </nav>
+    <a routerLink="/cart" class="cart-link">
+      <app-icon name="bag" /><span class="bag-label">Bag</span
+      ><span class="cart-count">{{ store.itemCount() }}</span>
+      @if (store.itemCount()) {
+        <span class="header-total">{{ store.totalCents() / 100 | currency: 'EUR' }}</span>
+      }
+    </a>
+  </div>
+</header>
+@if (!store.storageAvailable()) {
+  <div class="storage-warning" role="status">
+    Browser storage is unavailable. Your shopping session will last until this page is closed.
+  </div>
+}
+<main id="main-content" tabindex="-1"><router-outlet /></main>
+<footer class="site-footer">
+  <div class="footer-top">
+    <a routerLink="/" class="brand">current<span class="brand-dot">.</span></a>
+    <p>A little better, every day.<br />Thoughtfully chosen tech for the way you live.</p>
+    <a routerLink="/" fragment="collection" class="text-link"
+      >Find your next everyday essential <app-icon
+    /></a>
+  </div>
+  <div class="footer-bottom">
+    <span>WebMCP Checkout Trap · A simulated store. No real payments.</span
+    ><a routerLink="/lab">Experiment lab <span aria-hidden="true">↗</span></a>
+  </div>
+</footer>

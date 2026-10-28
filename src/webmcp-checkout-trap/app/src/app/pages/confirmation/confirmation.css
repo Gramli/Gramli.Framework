@@ -1,0 +1,51 @@
+.confirmation {
+  max-width: 640px;
+  margin: 15px auto 0;
+  text-align: center;
+}
+.confirmation-check {
+  display: inline-flex;
+  background: var(--green);
+  border-radius: 50%;
+  padding: 23px;
+  margin-bottom: 28px;
+}
+.confirmation .eyebrow {
+  margin-bottom: 15px;
+}
+.receipt {
+  text-align: left;
+  margin: 30px 0;
+}
+.receipt-heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 15px;
+}
+.receipt-heading strong {
+  font-size: 13px;
+}
+.receipt-heading > span {
+  font-size: 11px;
+  color: var(--muted);
+}
+.receipt-line {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 12px 0;
+}
+.receipt-line span:last-child {
+  white-space: nowrap;
+}
+.receipt .total-line:first-of-type {
+  margin-top: 15px;
+}
+.receipt .small {
+  margin-bottom: 0;
+}

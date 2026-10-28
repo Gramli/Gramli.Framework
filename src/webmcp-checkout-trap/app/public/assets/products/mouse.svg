@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <linearGradient id="m" x1="0" y1="0" x2=".9" y2="1">
+      <stop stop-color="#ecebe1" />
+      <stop offset=".45" stop-color="#b9bcb0" />
+      <stop offset="1" stop-color="#7c8775" />
+    </linearGradient>
+    <linearGradient id="side">
+      <stop stop-color="#a5ae9d" />
+      <stop offset="1" stop-color="#66745f" />
+    </linearGradient>
+    <filter id="s" x="-60%" y="-35%" width="230%" height="200%">
+      <feDropShadow dx="14" dy="19" stdDeviation="14" flood-color="#515747" flood-opacity=".23" />
+    </filter>
+  </defs>
+  <g transform="rotate(-24 300 250)" filter="url(#s)">
+    <path d="M207 210c0-100 195-100 195 0v88c0 131-195 131-195 0Z" fill="url(#side)" />
+    <path
+      d="M204 198c0-96 188-96 188 0v96c0 121-188 121-188 0Z"
+      fill="url(#m)"
+      stroke="#aab1a1"
+      stroke-width="2"
+    />
+    <path d="M297 128v95m-91 21q92 19 184 0" stroke="#899580" stroke-width="1.5" fill="none" />
+    <rect x="287" y="163" width="21" height="50" rx="10" fill="#69795e" />
+    <path d="M293 170v34m4-34v34m4-34v34" stroke="#9aaa8b" stroke-width="1" />
+    <path
+      d="M220 196q5-48 44-57"
+      stroke="#f4f5ed"
+      stroke-opacity=".5"
+      stroke-width="3"
+      stroke-linecap="round"
+    />
+    <path d="m298 320-7 10h5l-1 7 9-13h-6z" fill="#75836d" />
+  </g>
+</svg>

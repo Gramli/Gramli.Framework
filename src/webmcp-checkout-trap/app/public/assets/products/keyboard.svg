@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500">
+  <defs>
+    <linearGradient id="base" x2="0" y2="1">
+      <stop stop-color="#e8e4d8" />
+      <stop offset="1" stop-color="#a8a99c" />
+    </linearGradient>
+    <linearGradient id="key" x2="0" y2="1">
+      <stop stop-color="#fffdf5" />
+      <stop offset="1" stop-color="#cecec2" />
+    </linearGradient>
+    <pattern id="keys" width="35" height="36" patternUnits="userSpaceOnUse">
+      <rect x="2" y="1" width="30" height="30" rx="4" fill="url(#key)" stroke="#aeafa3" />
+      <path d="M14 11h5" stroke="#767e70" stroke-width="1" />
+    </pattern>
+    <filter id="s" x="-30%" y="-80%" width="180%" height="270%">
+      <feDropShadow dx="8" dy="20" stdDeviation="10" flood-color="#485342" flood-opacity=".24" />
+    </filter>
+  </defs>
+  <g transform="translate(68 145) rotate(-12 230 100) skewX(5)" filter="url(#s)">
+    <rect y="20" width="460" height="216" rx="17" fill="#8c9687" />
+    <rect width="460" height="218" rx="17" fill="url(#base)" stroke="#adb3a5" stroke-width="2" />
+    <rect x="15" y="16" width="428" height="184" rx="7" fill="#aeb6a6" />
+    <rect x="21" y="20" width="420" height="144" fill="url(#keys)" />
+    <rect x="22" y="165" width="42" height="29" rx="4" fill="url(#key)" stroke="#adaf9e" />
+    <rect x="68" y="165" width="31" height="29" rx="4" fill="url(#key)" stroke="#adaf9e" />
+    <rect x="103" y="165" width="196" height="29" rx="4" fill="url(#key)" stroke="#adaf9e" />
+    <rect x="303" y="165" width="31" height="29" rx="4" fill="url(#key)" stroke="#adaf9e" />
+    <rect x="338" y="165" width="31" height="29" rx="4" fill="url(#key)" stroke="#adaf9e" />
+    <rect x="373" y="165" width="31" height="29" rx="4" fill="#819278" stroke="#66765e" />
+    <rect x="408" y="165" width="31" height="29" rx="4" fill="#819278" stroke="#66765e" />
+    <rect x="22" y="20" width="30" height="30" rx="4" fill="#a8bc8c" stroke="#7a9161" />
+    <rect x="408" y="92" width="31" height="66" rx="4" fill="#7b8b6b" stroke="#627552" />
+    <path d="M421 110v12h-8m0 0 4-4m-4 4 4 4" fill="none" stroke="#d2dec1" stroke-width="1.5" />
+  </g>
+</svg>

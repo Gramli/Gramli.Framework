@@ -1,0 +1,6 @@
+agent/node_modules/
+agent/.env
+agent/.env.*
+!agent/.env.example
+agent/.chrome-agent-profile/
+agent/runs/

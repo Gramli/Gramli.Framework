@@ -1,0 +1,148 @@
+<div class="page">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="tiny-dot"></span> The everyday collection</p>
+      <h1 id="hero-title">Good tech.<br />Great everyday.</h1>
+      <p class="hero-description">
+        Small upgrades. A big difference.<br />Discover thoughtfully chosen tech that fits right
+        into your life.
+      </p>
+      <a class="button" routerLink="/" fragment="collection">Explore the collection <app-icon /></a>
+      <div class="hero-footnote">
+        <span class="mini-line"></span> Less complication. More possibility.
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-circle" aria-hidden="true"></div>
+      <span class="hero-side-note" aria-hidden="true">TUNE INTO YOUR EVERYDAY</span>
+      <img
+        ngSrc="/assets/products/headphones.svg"
+        width="600"
+        height="500"
+        priority
+        alt="Arc over-ear wireless headphones in graphite"
+        class="hero-headphones"
+      />
+      <a routerLink="/product/arc-headphones" class="hero-product"
+        ><span
+          ><span class="eyebrow">Your daily soundtrack</span><strong>Arc Wireless Headphones</strong
+          ><span>Graphite · €95.00</span></span
+        ><span class="round-arrow"><app-icon /></span
+      ></a>
+    </div>
+  </section>
+  <div class="benefits" aria-label="Shopping information">
+    <div>
+      <app-icon name="truck" /><span
+        ><strong>Delivery, your way</strong><span>Standard, express, or free collection</span></span
+      >
+    </div>
+    <div>
+      <app-icon name="box" /><span
+        ><strong>Thoughtfully selected</strong
+        ><span>Everyday essentials. Nothing extra.</span></span
+      >
+    </div>
+    <div>
+      <app-icon name="shield" /><span
+        ><strong>Try the whole experience</strong
+        ><span>Simulated checkout. No real charges.</span></span
+      >
+    </div>
+  </div>
+  <section id="collection" class="collection" aria-labelledby="collection-title">
+    <div class="collection-heading">
+      <div>
+        <p class="eyebrow">Find your next favorite</p>
+        <h2 id="collection-title">Everyday essentials<span>.</span></h2>
+      </div>
+      <span class="product-count">{{ visibleProducts().length }} thoughtfully chosen products</span>
+    </div>
+    <div class="catalog-controls">
+      <nav class="category-pills" aria-label="Product categories">
+        <a
+          routerLink="/"
+          fragment="collection"
+          [class.selected]="!category()"
+          [attr.aria-current]="!category() ? 'true' : null"
+          >All products</a
+        >
+        @for (item of categories; track item) {
+          <a
+            routerLink="/"
+            fragment="collection"
+            [queryParams]="{ category: item }"
+            [class.selected]="category() === item"
+            [attr.aria-current]="category() === item ? 'true' : null"
+            >{{ item }}</a
+          >
+        }
+      </nav>
+      <div class="search-sort">
+        <label class="search-field"
+          ><app-icon name="search" /><span class="sr-only">Search products</span
+          ><input type="search" [formField]="filters.query" placeholder="Search essentials"
+        /></label>
+        <label class="sort-field"
+          ><span class="sr-only">Sort products</span
+          ><select [formField]="filters.sort">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+          </select></label
+        >
+      </div>
+    </div>
+    <div class="notice" role="status">{{ notice() }}</div>
+    <div class="product-grid">
+      @for (product of visibleProducts(); track product.id) {
+        <article class="product-card">
+          <a [routerLink]="['/product', product.id]" [class]="'product-image art-' + product.image">
+            @if (product.badge) {
+              <span class="product-badge">{{ product.badge }}</span>
+            }
+            <img
+              [ngSrc]="'/assets/products/' + product.image + '.svg'"
+              width="400"
+              height="340"
+              [alt]="product.name + ' in ' + product.color"
+            />
+            <span class="image-caption">{{ product.color }}</span>
+          </a>
+          <div class="product-category">{{ product.category }}</div>
+          <h3>
+            <a [routerLink]="['/product', product.id]">{{ product.name }}</a>
+          </h3>
+          <p>{{ product.description }}</p>
+          <div class="product-bottom">
+            <strong>{{ product.priceCents / 100 | currency: 'EUR' }}</strong
+            ><button
+              type="button"
+              class="add-button"
+              (click)="add(product.id)"
+              [attr.aria-label]="'Add to bag: ' + product.name"
+            >
+              Add to bag <app-icon name="plus" />
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="empty-state">
+          <h3>No essentials found</h3>
+          <p class="muted">Try another search or category.</p>
+          <button class="button secondary" (click)="model.set({ query: '', sort: 'featured' })">
+            Clear search
+          </button>
+        </div>
+      }
+    </div>
+  </section>
+  <section class="closing-note">
+    <span class="eyebrow">Well chosen. Well used.</span>
+    <h2>Less searching.<br />More living.</h2>
+    <p>Just the tech you need, at prices that make sense.</p>
+    <a class="text-link" routerLink="/" fragment="collection"
+      >Meet your everyday essentials <app-icon /></a
+    ><span class="closing-symbol" aria-hidden="true">c.</span>
+  </section>
+</div>
