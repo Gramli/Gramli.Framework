@@ -3,28 +3,28 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
-    title: 'Current · Everyday electronics | WebMCP Checkout Trap',
+    title: "Daniel's Store · Everyday electronics | WebMCP Checkout Trap",
     loadComponent: () => import('./pages/catalog/catalog').then((m) => m.Catalog),
   },
   {
     path: 'product/:id',
-    title: 'Product details · Current',
+    title: "Product details · Daniel's Store",
     loadComponent: () =>
       import('./pages/product-detail/product-detail').then((m) => m.ProductDetail),
   },
   {
     path: 'cart',
-    title: 'Your bag · Current',
+    title: "Your bag · Daniel's Store",
     loadComponent: () => import('./pages/cart/cart').then((m) => m.Cart),
   },
   {
     path: 'checkout',
-    title: 'Checkout · Current',
+    title: "Checkout · Daniel's Store",
     loadComponent: () => import('./pages/checkout/checkout').then((m) => m.Checkout),
   },
   {
     path: 'order/:id',
-    title: 'Order confirmation · Current',
+    title: "Order confirmation · Daniel's Store",
     loadComponent: () => import('./pages/confirmation/confirmation').then((m) => m.Confirmation),
   },
   {

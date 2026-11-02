@@ -26,7 +26,7 @@
       <a routerLink="/product/arc-headphones" class="hero-product"
         ><span
           ><span class="eyebrow">Your daily soundtrack</span><strong>Arc Wireless Headphones</strong
-          ><span>Graphite · €95.00</span></span
+          ><span>{{ heroProduct.color }} · {{ heroProduct.priceCents / 100 | currency: 'EUR' }}</span></span
         ><span class="round-arrow"><app-icon /></span
       ></a>
     </div>

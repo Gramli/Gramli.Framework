@@ -15,6 +15,7 @@ import { Icon } from '../../shared/icon/icon';
 })
 export class Catalog {
   readonly store = inject(Store);
+  readonly heroProduct = this.store.getProduct('arc-headphones');
   private readonly route = inject(ActivatedRoute);
   private readonly params = toSignal(this.route.queryParamMap, {
     initialValue: this.route.snapshot.queryParamMap,
