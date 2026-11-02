@@ -1,0 +1,10 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gramli-framework",
+  "compatibility_date": "2026-11-02",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./dist/webmcp-checkout-trap/browser",
+    "not_found_handling": "single-page-application"
+  }
+}
